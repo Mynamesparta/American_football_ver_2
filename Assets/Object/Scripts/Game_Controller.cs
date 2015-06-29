@@ -75,7 +75,42 @@ public class Game_Controller : MonoBehaviour {
 		Strategy.canvas = canvas;
 		SCRIPTS.strategy.AwakeStaticDate ();
 		SCRIPTS.strategy.Ini ();
-		setCurrentPlayer (WhiteTeam [0]);
+		if(WhiteTeam.Count>0)
+			setCurrentPlayer (WhiteTeam [0]);
+	}
+	void OnApplicationQuit()
+	{
+
+		if (!OPTIONS.destroy_before_Quit)
+			return;
+		//
+		Object.Destroy (OBJECTS.WhiteTeam);
+		Object.Destroy (OBJECTS.BlackTeam);
+		/*/
+		for(int i=0;i<WhiteTeam.Count;i++)
+		{
+			MonoBehaviour.Destroy(WhiteTeam[i].gameObject);
+		}
+		for(int i=0;i<BlackTeam.Count;i++)
+		{
+			MonoBehaviour.Destroy(BlackTeam[i].gameObject);
+		}
+		/*/
+		WhiteTeam.Clear ();
+		BlackTeam.Clear ();
+		
+		MonoBehaviour.Destroy (OBJECTS.Main_Camera.gameObject);
+		MonoBehaviour.Destroy (OBJECTS.Strategy_Camera.gameObject);
+		MonoBehaviour.Destroy (OBJECTS.Strategy_Focus);
+		Destroy (SCRIPTS.canvas.gameObject);
+		Destroy (SCRIPTS.counter.gameObject);
+		Destroy (SCRIPTS.files.gameObject);
+		Destroy (SCRIPTS.main_camera.gameObject);
+		Destroy (SCRIPTS.pickUp.gameObject);
+		Destroy (SCRIPTS.strategy.gameObject);
+		System.GC.Collect();
+
+		MonoBehaviour.print ("Bye");
 	}
 	bool First_Update=true;
 	void Update () 
@@ -91,6 +126,9 @@ public class Game_Controller : MonoBehaviour {
 			break;
 		}
 		}
+	} 
+	void Start()
+	{
 		if (First_Update) 
 		{
 			canvas.gameObject.SetActive(true);
@@ -102,9 +140,14 @@ public class Game_Controller : MonoBehaviour {
 			StartGame();
 			Time_to_Play(true);
 		}
-	} 
+	}
 	public void StartGame()
 	{
+		if (OPTIONS.TestDestroy) 
+		{
+			OnApplicationQuit ();
+			return;
+		}
 		SCRIPTS.counter.float_counter_1 =	OPTIONS.Start_Pos_of_Yellow_Line;
 		SCRIPTS.pickUp.TimeToPickUp (false);
 		MonoBehaviour.print ("Start Game");
@@ -293,6 +336,8 @@ public class Game_Controller : MonoBehaviour {
 		public bool isTime_for_Test_Play;
 		public bool Stasis;
 		public float minSpeed_for_StM;
+		public bool destroy_before_Quit;
+		public bool TestDestroy;
 	}
 	[System.Serializable]
 	public struct Transform_GC

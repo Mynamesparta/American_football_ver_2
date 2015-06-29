@@ -23,6 +23,11 @@ public class Canvas : MonoBehaviour {
 		inScene (name_of_Button.Editor, IN_SCENE.Editor);
 		inScene (name_of_Button.Menu, IN_SCENE.Menu);
 	}
+	
+	void OnApplicationQuit()
+	{
+
+	}
 	int getNumber_of_Button(name_of_Button name)
 	{
 		return (int)name;

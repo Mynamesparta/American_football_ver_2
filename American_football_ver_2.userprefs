@@ -1,0 +1,15 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Object\Scripts\PlayerMovement_part2.cs">
+    <Files>
+      <File FileName="Assets\Object\Scripts\PlayerMovement_part2.cs" Line="1" Column="1" />
+      <File FileName="American_football_ver_2.sln" Line="1" Column="1" />
+      <File FileName="Assets\Object\Scripts\Game_Controller.cs" Line="111" Column="23" />
+      <File FileName="Assets\Scripts\Canvas.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
