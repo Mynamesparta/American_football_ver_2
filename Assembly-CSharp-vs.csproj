@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Object\Scripts\Action.cs" />
      <Compile Include="Assets\Object\Scripts\Arm_Controller.cs" />
+     <Compile Include="Assets\Object\Scripts\Armature.cs" />
      <Compile Include="Assets\Object\Scripts\BallController.cs" />
      <Compile Include="Assets\Object\Scripts\Camera_controller.cs" />
      <Compile Include="Assets\Object\Scripts\Collider_Action.cs" />

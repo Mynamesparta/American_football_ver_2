@@ -6,6 +6,8 @@ public class Collider_Action : MonoBehaviour
 	public delegate void Trigger(Collider other);
 	public event Trigger Stay;
 	public event Trigger Exit;
+	public event Trigger Enter;
+	//public event Trigger 
 	bool Wellcome=true;
 	//void OnTrigger
 	//
@@ -35,6 +37,16 @@ public class Collider_Action : MonoBehaviour
 		if(Exit!=null)
 		{
 			Exit(other);
+		}
+	}
+	void OnTriggerEnter( Collider other)
+	{
+		
+		if (other.tag == Tags.football_field)
+			return;
+		if(Enter!=null)
+		{
+			Enter(other);
 		}
 	}
 	//

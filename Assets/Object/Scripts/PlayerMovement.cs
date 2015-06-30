@@ -62,6 +62,14 @@ public partial class PlayerMovement : MonoBehaviour {
 		COLLIDER.Ball.Exit += Ball_Exit;
 		COLLIDER.Fall.Stay += Fall_Exit;
 		COLLIDER.Fall.Exit += Fall_Exit;
+		COLLIDER.Navigation.Enter += Strategy_Move_Enter;
+		COLLIDER.Navigation.Exit += Strategy_Move_Exit;
+	}
+	void Start()
+	{
+		Vector2[] result=getPoints_of_Tangency(new Vector2(),new Vector2(2,2),2);
+		MonoBehaviour.print (result [0].ToString ());
+		MonoBehaviour.print (result [1].ToString ());
 	}
 	
 	
@@ -136,7 +144,7 @@ public partial class PlayerMovement : MonoBehaviour {
 	}
 	void MovementManagement (float rot, float fow)
 	{
-		MonoBehaviour.print(Name+"_angularspeed:"+rot+"*"+SPEED.maxAngularSpeed);
+		//MonoBehaviour.print(Name+"_angularspeed:"+rot+"*"+SPEED.maxAngularSpeed);
 		if(contr.OPTIONS.Stasis)
 			fow = 0;
 		//rot = Mathf.Sign (rot);
