@@ -74,8 +74,23 @@ public partial class PlayerMovement : MonoBehaviour
 		number_of_Opponent--;
 		list_of_Opponent.Remove (other.transform);
 	}
+	public Vector3[] getPoints_of_Tangency(Vector3 O,Vector3 A)
+	{
+		Vector2 o, a;
+		o.x = O.x;
+		o.y = O.z;
+		a.x = A.x;
+		a.y = O.z;
+		Vector3[] result=new Vector3[]{new Vector3(),new Vector3()};
+		Vector2[] _result = _getPoints_of_Tangency (o, a, Game_Controller.current_contr.OPTIONS.radius_of_Tangency);
+			result[0].x=_result[0].x;
+			result[0].z=_result[0].y;
+			result[1].x=_result[1].x;
+			result[1].z=_result[1].y;
+		return result;
+	}
 	internal float[] C=new float[6];
-	public Vector2[] getPoints_of_Tangency(Vector2 O,Vector2 A,float r)
+	Vector2[] _getPoints_of_Tangency(Vector2 O,Vector2 A,float r)
 		/*/
 		 * Пошук точок перетину кола, з центром О та радіосом r, та двох прамих, що є дотичними до коло та проходять через точку A.
 		/*/
@@ -83,10 +98,15 @@ public partial class PlayerMovement : MonoBehaviour
 		C [0] = A.x - O.x;
 		C [1] = A.y - O.y;
 		C [4] = C [0] / C [1];
+		//MonoBehaviour.print (C [4]);
 		C [0] = C[0]*C[0]+C[1]*C[1];
-		C [0] = r * r - C [0];
-
+		C [0] = 2*r * r - C [0];
 		C [3] = (A.y - O.y) / 2;
+		if(C[3]==0)
+		{
+			MonoBehaviour.print("Magic!!!!!");
+			C[3]=0.0001f;
+		}
 		C [2] = (C [0] + A.x * A.x - O.x * O.x) / (4 * C [3]);
 		C [0] = C [2] + C [3];
 		C [1] = C [2] - C [3];
@@ -98,7 +118,8 @@ public partial class PlayerMovement : MonoBehaviour
 		if(C[0]<0)
 		{
 			MonoBehaviour.print("Something wrong in function getPoints_of_Tangency: D<0");
-			return new Vector2[]{new Vector2(),new Vector2()};
+			//return new Vector2[]{new Vector2(),new Vector2()};
+			C[0]=-C[0];
 		}
 		C [2] = 2 * (C [2] * C [2] - 1);
 		C [1] = Mathf.Sqrt (C [0]) / C [2];

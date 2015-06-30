@@ -338,6 +338,7 @@ public class Game_Controller : MonoBehaviour {
 		public float minSpeed_for_StM;
 		public bool destroy_before_Quit;
 		public bool TestDestroy;
+		public float radius_of_Tangency;
 	}
 	[System.Serializable]
 	public struct Transform_GC

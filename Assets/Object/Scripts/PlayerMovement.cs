@@ -67,9 +67,11 @@ public partial class PlayerMovement : MonoBehaviour {
 	}
 	void Start()
 	{
-		Vector2[] result=getPoints_of_Tangency(new Vector2(),new Vector2(2,2),2);
+		/*/
+		Vector2[] result=getPoints_of_Tangency(new Vector2(),new Vector2(1,-3),2);
 		MonoBehaviour.print (result [0].ToString ());
 		MonoBehaviour.print (result [1].ToString ());
+		/*/
 	}
 	
 	
