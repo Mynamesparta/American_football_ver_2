@@ -163,7 +163,7 @@ public class Game_Controller : MonoBehaviour {
 		}
 		else
 		{
-			MonoBehaviour.print ("Something Wrong: StartPlay==null");
+			//MonoBehaviour.print ("Something Wrong: StartPlay==null");
 		}
 		canvas.inScene (name_of_Button.FileList, true);
 		ChoseStrategy (true);
@@ -338,7 +338,8 @@ public class Game_Controller : MonoBehaviour {
 		public float minSpeed_for_StM;
 		public bool destroy_before_Quit;
 		public bool TestDestroy;
-		public float radius_of_Tangency;
+		public float min_radius_of_Tangency;
+		public float max_radius_of_Tangency;
 	}
 	[System.Serializable]
 	public struct Transform_GC

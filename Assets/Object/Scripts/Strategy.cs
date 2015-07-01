@@ -387,7 +387,21 @@ public partial class Strategy : MonoBehaviour
 				_isWork=true;
 				return new Vector3();
 			}
-			return other_player;
+			Vector3 strategyPoint = currentAction.getCurrentStrategyPoint (other_player);
+			if(currentAction.endPlay)
+			{
+				currentIndex_of_Action++;
+				if(currentIndex_of_Action>=getLenght())
+				{
+					_isWork=false;
+					//MonoBehaviour.print("end Activitis..");
+					return new Vector3();
+				}
+				_newAction=true;
+				currentAction.StartPlay();
+				return getCurrentStrategyPoint(other_player);
+			}
+			return strategyPoint;
 		}
 		//=====================================Builder=====================
 		public static Action createAction(string _name)
