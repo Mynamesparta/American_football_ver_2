@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public partial class PlayerMovement : MonoBehaviour 
 {
 	//===============================Strategy=Move================
-	internal Vector3? oponent;
+	internal object _oponent_;
+	internal Transform oponent=null;
 	internal Vector3 newPosition;
 	internal float rot, abs_rot;
 	private void BotTime()
@@ -15,20 +16,23 @@ public partial class PlayerMovement : MonoBehaviour
 		if (!current_action.isWork)
 			return;
 		//if(oponent==null)
-		oponent = Time_for_Tangency ();
-		if(!oponent.HasValue)
+		_oponent_ = Time_for_Tangency ();
+		if(_oponent_==null)
 		{
 			//MonoBehaviour.print(number_of_Opponent);
 			newPosition = current_action.getCurrentStrategyPoint ();
 		}
 		else
 		{
-			//MonoBehaviour.print(newPosition.ToString());
-			//MonoBehaviour.print(number_of_Opponent);
-			newPosition = current_action.getCurrentStrategyPoint (oponent.Value);
-			//if(Vector3.Distance(transform.position,(Vector3)oponent)>contr.OPTIONS.min_radius_of_Tangency)
+			oponent=(Transform)_oponent_;
+			newPosition = current_action.getCurrentStrategyPoint (oponent.position);
+			if(isTimetoTangency(oponent.position,newPosition-transform.position,transform.position))
 			{
-				newPosition=getPoints_of_Tangency(oponent.Value,transform.position)[0];
+				newPosition=getPoints_of_Tangency(oponent,transform.position);
+			}
+			else
+			{
+				_oponent_=null;
 			}
 		}
 		rot=takeRot (newPosition);
@@ -93,20 +97,30 @@ public partial class PlayerMovement : MonoBehaviour
 		MonoBehaviour.print (number_of_Opponent);
 		list_of_Opponent.Remove (player);
 	}
-	public Vector3[] getPoints_of_Tangency(Vector3 O,Vector3 A)
+	public Vector3 getPoints_of_Tangency(Transform O,Vector3 A)
 	{
-		Vector2 o, a;
-		o.x = O.x;
-		o.y = O.z;
-		a.x = A.x;
-		a.y = A.z;
-		Vector3[] result=new Vector3[]{new Vector3(),new Vector3()};
-		Vector2[] _result = _getPoints_of_Tangency (o, a, Game_Controller.current_contr.OPTIONS.min_radius_of_Tangency);
-			result[0].x=_result[0].x;
-			result[0].z=_result[0].y;
-			result[1].x=_result[1].x;
-			result[1].z=_result[1].y;
-		return result;
+		Vector2[] _result = _getPoints_of_Tangency (toVector2(O.position),toVector2( A), contr.OPTIONS.min_radius_of_Tangency);
+		Vector3[] result=new Vector3[2];
+		result[0]=toVector3(_result[0]);
+		result[1]=toVector3(_result[1]);
+		/*/
+		MonoBehaviour.print ("=================================");
+		MonoBehaviour.print (result [0].ToString ());
+		MonoBehaviour.print (result [1].ToString ());
+		MonoBehaviour.print (O.position.ToString ());
+		MonoBehaviour.print(Quaternion.FromToRotation(O.forward,result[0]-O.position).y);
+		MonoBehaviour.print(Quaternion.FromToRotation(O.forward,result[1]-O.position).y);
+		MonoBehaviour.print ("=================================");
+		/*/
+		return result [1];
+		if(Quaternion.FromToRotation(O.forward,result[0]-O.position).y<Quaternion.FromToRotation(O.forward,result[1]-O.position).y)
+		{
+			return result[0];
+		}
+		else
+		{
+			return result[1];
+		}
 	}
 	internal float[] C=new float[6];
 	Vector2[] _getPoints_of_Tangency(Vector2 O,Vector2 A,float r)
@@ -144,7 +158,7 @@ public partial class PlayerMovement : MonoBehaviour
 		{
 			MonoBehaviour.print("Something wrong in function getPoints_of_Tangency: D<0");
 			//return new Vector2[]{new Vector2(),new Vector2()};
-			C[0]=-C[0];
+			C[0]=0;
 		}
 		C [2] = 2 * (C [2] * C [2] - 1);
 		C [1] = Mathf.Sqrt (C [0]) / C [2];
@@ -155,18 +169,53 @@ public partial class PlayerMovement : MonoBehaviour
 		result [1].x = C [3] - C [1];
 		result [0].y = C [5] + result [0].x * C [4];
 		result [1].y = C [5] + result [1].x * C [4];
+		MonoBehaviour.print ("------------");
+		MonoBehaviour.print (result [0].ToString ());
+		MonoBehaviour.print (result [1].ToString ());
+		MonoBehaviour.print ("------------");
 		return result;
 
 	}
-	Vector3? Time_for_Tangency()
+	object Time_for_Tangency()
 	{
 		for(int i=0;i<list_of_Opponent.Count;i++)
 		{
 			if(Vector3.Distance(transform.position,list_of_Opponent[i].position)<contr.OPTIONS.max_radius_of_Tangency)
 			{
-				return (Vector3?) list_of_Opponent[i].position;
+				return (object) list_of_Opponent[i].transform;
 			}
 		}
-		return null;
+		return oponent;
+	}
+	static public Vector2 toVector2(Vector3 vec)
+	{
+		Vector2 res = new Vector2 ();
+		res.x = vec.x;
+		res.y = vec.z;
+		return res;
+	}
+	static public Vector3 toVector3(Vector2 vec)
+	{
+		Vector3 res = new Vector3 ();
+		res.x = vec.x;
+		res.z = vec.y;
+		return res;
+	}
+	static public float distance(Vector3 point,Vector3 line,Vector3 point_in_line)
+	{
+		return distance (toVector2 (point), toVector2 (line), toVector2 (point_in_line));
+	}
+	static public float distance(Vector2 point, Vector2 line,Vector3 point_in_line)
+	{
+		float D=Mathf.Sqrt(line.x*line.x+line.y*line.y);
+		float c=-line.x*point_in_line.x-line.y*point_in_line.y;
+		return Mathf.Abs ((point.x*line.x+point.y*line.y+c)/D);
+	}
+	public bool isTimetoTangency(Vector3 point,Vector3 line,Vector3 point_in_line)
+	{
+		Vector3 deltaPoint = transform.position + transform.forward;
+		if (Vector3.Distance (point, deltaPoint) > Vector3.Distance (point, transform.position))
+			return false;
+		return distance (point, line, point_in_line) < contr.OPTIONS.min_radius_of_Tangency;
 	}
 }

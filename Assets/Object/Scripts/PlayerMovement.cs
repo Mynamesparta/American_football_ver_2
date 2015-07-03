@@ -67,6 +67,7 @@ public partial class PlayerMovement : MonoBehaviour {
 	}
 	void Start()
 	{
+		Strategy.Move.r = contr.OPTIONS.max_radius_of_Tangency;
 		/*/
 		Vector2[] result=getPoints_of_Tangency(new Vector2(),new Vector2(1,-3),2);
 		MonoBehaviour.print (result [0].ToString ());

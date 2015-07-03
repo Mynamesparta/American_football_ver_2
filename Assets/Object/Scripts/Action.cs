@@ -104,7 +104,7 @@ public partial class Strategy : MonoBehaviour
 			return currentPoint;
 		}
 		//
-		private float r;
+		public static float r;
 		public override Vector3 getCurrentStrategyPoint(Vector3 other_player)
 		{
 			while(Vector3.Distance(player.transform.position,currentPoint)<Game_Controller.current_contr.OPTIONS.min_distance)
@@ -151,7 +151,7 @@ public partial class Strategy : MonoBehaviour
 		{
 			SetName(name_of_Action.Move);
 			line=(GameObject.Instantiate(Clone_of_line)as GameObject).GetComponent<Line>();
-			r=PlayerMovement.contr.OPTIONS.min_radius_of_Tangency;
+			//r=PlayerMovement.contr.OPTIONS.min_radius_of_Tangency;
 			updateWithBall();
 		}
 		public Vector3 currentPoint
@@ -252,7 +252,7 @@ public partial class Strategy : MonoBehaviour
 		}
 		public override Vector3 getCurrentStrategyPoint(Vector3 other_player)
 		{
-			return other_player;
+			return getCurrentStrategyPoint();
 		}
 		protected override void _StartPlay()
 		{
@@ -332,7 +332,7 @@ public partial class Strategy : MonoBehaviour
 		}
 		public override Vector3 getCurrentStrategyPoint(Vector3 other_player)
 		{
-			return other_player;
+			return getCurrentStrategyPoint();
 		}
 		protected override void _StartPlay()
 		{

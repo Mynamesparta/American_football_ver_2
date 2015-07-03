@@ -248,7 +248,7 @@ public class Game_Controller : MonoBehaviour {
 	}
 	public void PickMe(PlayerMovement Zenor)
 	{
-		if (SCRIPTS.pickUp.isWork)
+		if (!SCRIPTS.pickUp.isTimeToPickUp)
 			return;
 		if (Zenor.team != currentTeam)
 			return;

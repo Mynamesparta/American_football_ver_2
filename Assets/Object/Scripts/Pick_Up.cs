@@ -8,14 +8,14 @@ public class Pick_Up : MonoBehaviour
 	public Color[] color;
 
 	bool isLeftSide;
-	bool isTimeToPickUp=false;
+	bool _isTimeToPickUp=false;
 	PlayerMovement _Zenor;
 	public PlayerMovement Zenor
 	{
 		get{ return _Zenor;}
 		set
 		{
-			if (!isTimeToPickUp)
+			if (!_isTimeToPickUp)
 				return;
 			if(value.OPTION.isBlockPickUp)
 				return;
@@ -57,6 +57,8 @@ public class Pick_Up : MonoBehaviour
 		get{ return _isWork;}
 		set
 		{
+			if(!_isTimeToPickUp)
+				return;
 			_isWork=value;
 			//MonoBehaviour.print("hello:"+value.ToString());
 			anim.SetBool("PickTime",value);
@@ -79,7 +81,7 @@ public class Pick_Up : MonoBehaviour
 	bool Block_Side;
 	public void Update()
 	{
-		if (!isTimeToPickUp)
+		if (!_isTimeToPickUp)
 			return;
 		if (_Zenor == null||_Zenor.OPTION.isBlockPickUp)
 			return;
@@ -106,12 +108,18 @@ public class Pick_Up : MonoBehaviour
 	}
 	public void TimeToPickUp(bool b)
 	{
-		isTimeToPickUp = b;
-		isWork = false;
+		isWork =false;
+		_isTimeToPickUp = b;
+	}
+	public bool isTimeToPickUp {
+		get
+		{
+			return _isTimeToPickUp;
+		}
 	}
 	void OnTriggerEnter(Collider other)
 	{
-		if (!isTimeToPickUp)
+		if (!_isTimeToPickUp)
 			return;
 		if (_Zenor == null)
 			return;
@@ -134,7 +142,7 @@ public class Pick_Up : MonoBehaviour
 	}
 	void OnTriggerExit(Collider other)
 	{
-		if (!isTimeToPickUp)
+		if (!_isTimeToPickUp)
 			return;
 		if (_Zenor == null)
 			return;
