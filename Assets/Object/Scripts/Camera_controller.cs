@@ -10,6 +10,7 @@ public class Camera_controller : MonoBehaviour {
 	public float Rad_Rot;
 	public Camera mainCamera;
 	public State_of_Camera _state;
+	public static Camera main_Camera;
 	private float startTime;
 	private float journeyLength;
 	private Vector3 last_mouse_position;
@@ -18,6 +19,7 @@ public class Camera_controller : MonoBehaviour {
 	void Start () 
 	{
 		last_mouse_position = Input.mousePosition;
+		main_Camera = mainCamera;
 		//offset = transform.position;
 	}
 	

@@ -16,9 +16,11 @@ public class BallController : MonoBehaviour {
 	private float startTime;
 	private float journeyLength;
 	private Vector3 Forse;
+	private Rigidbody rigidbody;
 	void Awake()
 	{
 		GetComponent<CapsuleCollider> ().isTrigger = true;
+		rigidbody = GetComponent<Rigidbody> ();
 		//mainCamera=GameObject.FindGameObjectWithTag(Tags.camera);
 	}
 	public void SetPosition(Transform _position)
@@ -35,6 +37,8 @@ public class BallController : MonoBehaviour {
 		{
 		case State_of_Ball.Player:
 		{
+			if(position==null||rotation==null)
+				return;
 			if (Vector3.Distance (transform.position, position.position) < speed * Time.deltaTime) 
 			{
 				transform.position = position.position;
@@ -65,11 +69,11 @@ public class BallController : MonoBehaviour {
 		counter.float_counter_2 = transform.position.x;
 
 	}
-	public void Pass(float PassForse)
+	public void Pass(Vector3 speed)
 	{
-		Forse = mainCamera.transform.forward * PassForse;
-		GetComponent<Rigidbody>().useGravity = true;
-		GetComponent<Rigidbody>().AddForce (Forse, ForceMode.Impulse);
+		rigidbody.isKinematic = false;
+		//GetComponent<Rigidbody>().AddForce (Forse, ForceMode.Impulse);
+		rigidbody.velocity = speed;
 		state = State_of_Ball.Air;
 		GetComponent<CapsuleCollider> ().isTrigger = false;
 	}

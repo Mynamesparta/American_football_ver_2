@@ -9,8 +9,6 @@ public partial class PlayerMovement : MonoBehaviour {
 	public Scripts SCRIPTS;
 	public State_of_Player state=State_of_Player.Normal;
 	public Team team;
-	public bool isBot=true;
-	public bool have_ball=false;
 	public float Forse;
 	//public int maxForseWhenRun=5;
 	public int mouseIndex=0;
@@ -22,7 +20,7 @@ public partial class PlayerMovement : MonoBehaviour {
 		set
 		{
 			_Name=value;
-			if(isBot)
+			if(OPTION.isBot)
 			{
 				gameObject.name=_Name;
 			}
@@ -42,6 +40,7 @@ public partial class PlayerMovement : MonoBehaviour {
 	private bool inPlay=false;
 	private Oponents oponents;
 	private string _Name;
+	private static int[] speeds_of_Ball;
 
 	//private bool Take_Ball = false;
 	
@@ -64,6 +63,9 @@ public partial class PlayerMovement : MonoBehaviour {
 		COLLIDER.Fall.Exit += Fall_Exit;
 		COLLIDER.Navigation.Enter += Strategy_Move_Enter;
 		COLLIDER.Navigation.Exit += Strategy_Move_Exit;
+
+		OPTION.isBot=true;
+		OPTION.have_ball=false;
 	}
 	void Start()
 	{
@@ -73,6 +75,7 @@ public partial class PlayerMovement : MonoBehaviour {
 		MonoBehaviour.print (result [0].ToString ());
 		MonoBehaviour.print (result [1].ToString ());
 		/*/
+		speeds_of_Ball = contr.OPTIONS_FOR_PLAYERS.speeds_of_Ball;
 	}
 	
 	
@@ -83,7 +86,7 @@ public partial class PlayerMovement : MonoBehaviour {
 		{
 			return;
 		}
-		if(!contr.OPTIONS.All_Bot&&!isBot)
+		if(!contr.OPTIONS.All_Bot&&!OPTION.isBot)
 		{
 			float rot = Input.GetAxis("Rotation");
 			float fow = Input.GetAxis("Forward");
@@ -106,7 +109,7 @@ public partial class PlayerMovement : MonoBehaviour {
 			ChangeRotation();
 			/*/
 		}
-		if(have_ball)
+		if(OPTION.have_ball)
 		{
 			ball_con.SetPosition(ball_position[indexBallpos]);
 			ball_con.SetRotation(transform);
@@ -251,8 +254,8 @@ public partial class PlayerMovement : MonoBehaviour {
 	}
 	public void setBot(bool setbot)
 	{
-		isBot = setbot;
-		if(isBot)
+		OPTION.isBot = setbot;
+		if(OPTION.isBot)
 		{
 			gameObject.name=_Name;
 		}
@@ -291,7 +294,7 @@ public partial class PlayerMovement : MonoBehaviour {
 		//print ("isTimetoPass: IndexOfPassForse=" + IndexOfPassForse);
 		if(!Input.GetMouseButton(mouseIndex))
 			anim.SetBool(hash.bool_pass,false);
-		/*/
+		/*/spe
 		else
 			if(IndexOfPassForse>=maxForseWhenRun&&state!=State_of_Player.Pass)
 				anim.SetBool(hash.bool_pass,false);
@@ -299,10 +302,26 @@ public partial class PlayerMovement : MonoBehaviour {
 	}
 	void Pass()
 	{
-		ball_con.Pass(IndexOfPassForse*Forse);
+		if(!OPTION.isBot)
+		{
+			if(IndexOfPassForse-1>=contr.OPTIONS_FOR_PLAYERS.speeds_of_Ball.Length)
+			{
+				MonoBehaviour.print("Something wrong: IndexOfPassForse("+(IndexOfPassForse-1)+")>= speeds_of_Ball.Length("
+				                    +contr.OPTIONS_FOR_PLAYERS.speeds_of_Ball.Length);
+			}
+			else
+			{
+				MonoBehaviour.print("current speeds_of_Ball:"+speeds_of_Ball[IndexOfPassForse-1]);
+				ball_con.Pass(Camera_controller.main_Camera.transform.forward*speeds_of_Ball[IndexOfPassForse-1]);
+			}
+		}
+		else
+		{
+
+		}
 		IndexOfPassForse = 0;
 		//print ("Pass");
-		have_ball = false;
+		OPTION.have_ball = false;
 		anim.SetBool(hash.bool_ball, false);
 		anim.SetBool(hash.bool_pass,false);
 	}
@@ -318,8 +337,8 @@ public partial class PlayerMovement : MonoBehaviour {
 		MonoBehaviour.print ("Fall_Stay...s" +
 			":" + player.gameObject.name);
 		//state = State_of_Player.Fall;
-		MonoBehaviour.print ((player != null).ToString()+" "+ isBot.ToString()+" " + Input.GetButtonDown ("Test").ToString());
-		if(player!=null&&isBot&&Input.GetButtonDown("Test"))
+		MonoBehaviour.print ((player != null).ToString()+" "+ OPTION.isBot.ToString()+" " + Input.GetButtonDown ("Test").ToString());
+		if(player!=null&&OPTION.isBot&&Input.GetButtonDown("Test"))
 		{
 			float _y=Quaternion.FromToRotation(transform.forward,player.forward).eulerAngles.y;
 			_y+=30;
@@ -340,22 +359,31 @@ public partial class PlayerMovement : MonoBehaviour {
 	void Ball_Stay(Collider other)
 	{
 			//print ("onTriggerStay:"+other.name);
-		if (!have_ball && other.tag == Tags.ball) 
+		if (!OPTION.have_ball && other.tag == Tags.ball) 
 		{
 			for(int i=0;i<arms.Length;i++)
 			{
 				arms[i].postion_of_ball=other.transform.position;
 			}
-			if (ball_con.getState () != State_of_Ball.Player && Input.GetMouseButton (1)) {
-				ball_con.Take ();
-				have_ball = true;
-				anim.SetBool (hash.bool_ball, true);
+			if (ball_con.getState () != State_of_Ball.Player && Input.GetMouseButton (1)) 
+			{
+				getBall();
 			}
+		}
+	}
+	void getBall()
+	{
+		ball_con.Take ();
+		OPTION.have_ball = true;
+		anim.SetBool (hash.bool_ball, true);
+		for(int i=0;i<arms.Length;i++)
+		{
+			arms[i].setMyPresions(false);
 		}
 	}
 	void Ball_Exit(Collider other)
 	{
-		if (!have_ball && other.tag == Tags.ball)
+		if (!OPTION.have_ball && other.tag == Tags.ball)
 		{
 			for(int i=0;i<arms.Length;i++)
 			{
@@ -419,6 +447,8 @@ public partial class PlayerMovement : MonoBehaviour {
 		public bool isBlockPickUp;
 		public int Index_Of_Mouse_Button;
 		public float MouseLock;
+		public bool isBot;
+		public bool have_ball;
 	}
 	[System.Serializable]
 	public struct Children_Transform

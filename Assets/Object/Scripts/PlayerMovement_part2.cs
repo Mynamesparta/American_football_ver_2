@@ -80,7 +80,7 @@ public partial class PlayerMovement : MonoBehaviour
 			return;
 		Armature player = other.GetComponent<Armature> ();
 		number_of_Opponent++;
-		MonoBehaviour.print (number_of_Opponent);
+		//MonoBehaviour.print (number_of_Opponent);
 		list_of_Opponent.Add (player);
 	}
 	public void Strategy_Move_Exit(Collider other)
@@ -169,10 +169,12 @@ public partial class PlayerMovement : MonoBehaviour
 		result [1].x = C [3] - C [1];
 		result [0].y = C [5] + result [0].x * C [4];
 		result [1].y = C [5] + result [1].x * C [4];
+		/*/
 		MonoBehaviour.print ("------------");
 		MonoBehaviour.print (result [0].ToString ());
 		MonoBehaviour.print (result [1].ToString ());
 		MonoBehaviour.print ("------------");
+		/*/
 		return result;
 
 	}

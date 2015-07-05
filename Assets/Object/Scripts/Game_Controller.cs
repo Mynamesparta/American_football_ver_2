@@ -7,6 +7,7 @@ public class Game_Controller : MonoBehaviour {
 	public Objects OBJECTS;
 	public Clone_of_Object CLONE;
 	public Options OPTIONS;
+	public Options_for_Players OPTIONS_FOR_PLAYERS;
 	public Anim ANIM;
 	public PlayerMovement Player;
 	public GameObject forTest;
@@ -265,6 +266,7 @@ public class Game_Controller : MonoBehaviour {
 		current_player = player;
 		current_player.setBot(false);
 		SCRIPTS.main_camera.setCurrentObject (current_player.gameObject);
+		//current_player.setPick
 	}
 	//==========================================Strategy===========================================
 	public List<PlayerMovement> getCurrentTeam()
@@ -340,6 +342,11 @@ public class Game_Controller : MonoBehaviour {
 		public bool TestDestroy;
 		public float min_radius_of_Tangency;
 		public float max_radius_of_Tangency;
+	}
+	[System.Serializable]
+	public struct Options_for_Players
+	{
+		public int[] speeds_of_Ball;
 	}
 	[System.Serializable]
 	public struct Transform_GC
