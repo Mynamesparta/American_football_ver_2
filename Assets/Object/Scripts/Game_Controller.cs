@@ -347,6 +347,8 @@ public class Game_Controller : MonoBehaviour {
 	public struct Options_for_Players
 	{
 		public int[] speeds_of_Ball;
+		public PlayerMovement test_Zenor;
+		public PlayerMovement.Angle_Pass angle;
 	}
 	[System.Serializable]
 	public struct Transform_GC

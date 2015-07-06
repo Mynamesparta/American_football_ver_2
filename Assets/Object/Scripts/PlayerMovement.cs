@@ -302,7 +302,7 @@ public partial class PlayerMovement : MonoBehaviour {
 	}
 	void Pass()
 	{
-		if(!OPTION.isBot)
+		if(false&&!OPTION.isBot)
 		{
 			if(IndexOfPassForse-1>=contr.OPTIONS_FOR_PLAYERS.speeds_of_Ball.Length)
 			{
@@ -317,7 +317,12 @@ public partial class PlayerMovement : MonoBehaviour {
 		}
 		else
 		{
-
+			float distance=Vector3.Distance(transform.position,contr.OPTIONS_FOR_PLAYERS.test_Zenor.transform.position);
+			float min_speed=getMinSpeed(distance);
+			min_speed*=1.5f;
+			ball_con.Pass(getVector_of_Speed(contr.OPTIONS_FOR_PLAYERS.test_Zenor.transform.position-transform.position,
+			                                 min_speed,
+			                                 getAngel(distance,min_speed)));
 		}
 		IndexOfPassForse = 0;
 		//print ("Pass");
@@ -329,6 +334,39 @@ public partial class PlayerMovement : MonoBehaviour {
 	{
 		//print ("End Pass");
 		state = State_of_Player.Normal;
+	}
+	public float getMinSpeed(float l)
+	{
+		return Mathf.Sqrt(l*9.8f);
+	}
+	public float getMinSpeed(Vector3 target)
+	{
+		return Mathf.Sqrt(Vector3.Distance(transform.position,target)*9.8f);
+	}
+	public Vector3 getVector_of_Speed(Vector3 direction,float speed, float angle)
+	{
+		MonoBehaviour.print ("tan(" + angle + ")=" + Mathf.Tan (angle));
+		Vector3 result = new Vector3 (direction.x, Mathf.Sqrt (direction.x * direction.x + direction.z * direction.z)*Mathf.Tan(angle), direction.z);
+		result = result * (speed / Mathf.Sqrt (result.x*result.x+result.y*result.y+result.z*result.z));
+		return result;
+	}
+	internal float getAngel(float l,float speed)
+	{
+		C[0] = l * 9.8f/(2*speed*speed);
+		switch(contr.OPTIONS_FOR_PLAYERS.angle)
+		{
+		case Angle_Pass.Long_Flight:
+		{
+			return (Mathf.PI/2-Mathf.Asin(2*C[0])/2);
+			break;
+		}
+		case Angle_Pass.Short_Flight:
+		{
+			return (Mathf.Asin(2*C[0])/2);
+			break;
+		}
+		}
+		return 0;
 	}
 	//=====================Fall======================================
 	public void Fall_Stay(Collider other)
@@ -467,6 +505,8 @@ public partial class PlayerMovement : MonoBehaviour {
 	{
 		public Game_Controller contr;
 	}
+	[System.Serializable]
+	public enum Angle_Pass{Long_Flight,Short_Flight};
 	public class Oponents
 	{
 		public Transform Left_Oponent;
