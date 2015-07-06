@@ -101,13 +101,18 @@ public partial class PlayerMovement : MonoBehaviour {
 		}
 		else
 		{
-			BotTime();
+			if(contr.OPTIONS_FOR_PLAYERS.Time_to_Strategy)
+				BotTime();
 			/*/
 			anim.SetFloat (hash.float_speed, 0f, SPEED.speedDampTime, Time.deltaTime);
 			anim.SetFloat (hash.float_angular_speed, 0f, SPEED.speedDampTime, Time.deltaTime);
 			ChangePosition();
 			ChangeRotation();
 			/*/
+			if(OPTION.have_ball)
+			{
+				Pass_to_another_PlayerB(contr.OPTIONS_FOR_PLAYERS.test_Zenor.transform.position);
+			}
 		}
 		if(OPTION.have_ball)
 		{
@@ -288,10 +293,17 @@ public partial class PlayerMovement : MonoBehaviour {
 	}
 	//======================Pass===================================
 	private int IndexOfPassForse=0;
+	private int Index_for_currentPassB=-1;//тількі для ботів;
+	private Vector3 current_speedB=new Vector3();//тількі для ботів;
 	void isTimetoPass()
 	{
 		IndexOfPassForse++;
 		//print ("isTimetoPass: IndexOfPassForse=" + IndexOfPassForse);
+		if(OPTION.isBot&&IndexOfPassForse==Index_for_currentPassB)
+		{
+			anim.SetBool(hash.bool_pass,false);
+			return;
+		}
 		if(!Input.GetMouseButton(mouseIndex))
 			anim.SetBool(hash.bool_pass,false);
 		/*/spe
@@ -311,18 +323,12 @@ public partial class PlayerMovement : MonoBehaviour {
 			}
 			else
 			{
-				MonoBehaviour.print("current speeds_of_Ball:"+speeds_of_Ball[IndexOfPassForse-1]);
 				ball_con.Pass(Camera_controller.main_Camera.transform.forward*speeds_of_Ball[IndexOfPassForse-1]);
 			}
 		}
 		else
 		{
-			float distance=Vector3.Distance(transform.position,contr.OPTIONS_FOR_PLAYERS.test_Zenor.transform.position);
-			float min_speed=getMinSpeed(distance);
-			min_speed*=1.5f;
-			ball_con.Pass(getVector_of_Speed(contr.OPTIONS_FOR_PLAYERS.test_Zenor.transform.position-transform.position,
-			                                 min_speed,
-			                                 getAngel(distance,min_speed)));
+			ball_con.Pass(current_speedB);
 		}
 		IndexOfPassForse = 0;
 		//print ("Pass");
@@ -367,6 +373,74 @@ public partial class PlayerMovement : MonoBehaviour {
 		}
 		}
 		return 0;
+	}
+	public bool I_Can_Pass(Vector3 target)
+	{
+		return getMinSpeed (target) <= speeds_of_Ball [speeds_of_Ball.Length - 1];
+	}
+	public bool I_Can_Pass(float speed)
+	{
+		return speed <= speeds_of_Ball [speeds_of_Ball.Length - 1];
+	}
+	public int getIndex_of_Min_Speeds_of_Ball(float speed)
+	{
+		if(!I_Can_Pass(speed))
+		{
+			return -1;
+		}
+		int i = speeds_of_Ball.Length / 2;
+		int k = speeds_of_Ball.Length / 4;
+		while(k!=0)
+		{
+			if(speeds_of_Ball[i]==speed)
+				return i;
+			if(speeds_of_Ball[i]<speed)
+			{
+				i+=k;
+				k/=2;
+				continue;
+			}
+			if(speed<speeds_of_Ball[i])
+			{
+				i-=k;
+				k/=2;
+				continue;
+			}
+		}
+		return speeds_of_Ball [i] < speed ? i+1: i;
+	}
+	public float getMin_Speeds_of_Ball(float speed)
+	{
+		int index = getIndex_of_Min_Speeds_of_Ball (speed);
+		if(index==-1)
+		{
+			MonoBehaviour.print("Something wrong: speed > max Speeds_of_Ball");
+			return speed;
+		}
+		return speeds_of_Ball [index];
+	}
+	public void Pass_to_another_PlayerB(Vector3 pos)//тількі для ботів
+	{
+		if (!OPTION.have_ball)
+			return;
+		C [0] = Vector3.Distance (pos, transform.position);
+		Index_for_currentPassB = getIndex_of_Min_Speeds_of_Ball (getMinSpeed(C [0]));
+		if(Index_for_currentPassB==-1)
+		{
+			MonoBehaviour.print("Something wrong: speed("+getMinSpeed(C[0])+") > max Speeds_of_Ball("+speeds_of_Ball [speeds_of_Ball.Length - 1]+")");
+			return;
+		}
+		if(Index_for_currentPassB>=speeds_of_Ball.Length)
+		{
+			MonoBehaviour.print("Something wrong: IndexOfPassForse >= speeds_of_Ball.Length");
+			return;
+		}
+		current_speedB = getVector_of_Speed (pos - transform.position,
+		                                  speeds_of_Ball [Index_for_currentPassB],
+		                                  C [0]);
+		
+		state=State_of_Player.Pass;
+		anim.SetBool(hash.bool_pass,true);
 	}
 	//=====================Fall======================================
 	public void Fall_Stay(Collider other)
