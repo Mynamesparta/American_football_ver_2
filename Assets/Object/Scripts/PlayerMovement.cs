@@ -38,7 +38,6 @@ public partial class PlayerMovement : MonoBehaviour {
 	private Arm_Controller[] arms;
 	private Strategy.Activities current_action;
 	private bool inPlay=false;
-	private Oponents oponents;
 	private string _Name;
 	private static int[] speeds_of_Ball;
 
@@ -56,13 +55,17 @@ public partial class PlayerMovement : MonoBehaviour {
 		timer = 0;
 		// Set the weight of the shouting layer to 1.
 		anim.SetLayerWeight(1, 1f);
-
-		COLLIDER.Ball.Stay += Ball_Stay;
-		COLLIDER.Ball.Exit += Ball_Exit;
+		
+		COLLIDER.Ball_1.Stay += Ball_Stay;
+		COLLIDER.Ball_1.Exit += Ball_Exit;
+		COLLIDER.Ball_2.Stay += Ball_Stay;
+		COLLIDER.Ball_2.Exit += Ball_Exit;
 		COLLIDER.Fall.Stay += Fall_Exit;
 		COLLIDER.Fall.Exit += Fall_Exit;
 		COLLIDER.Navigation.Enter += Strategy_Move_Enter;
 		COLLIDER.Navigation.Exit += Strategy_Move_Exit;
+		COLLIDER.Number_of_Enemy_Team.Enter += Number_of_ET_Enter;
+		COLLIDER.Number_of_Enemy_Team.Exit += Number_of_ET_Exit;
 
 		OPTION.isBot=true;
 		OPTION.have_ball=false;
@@ -109,15 +112,9 @@ public partial class PlayerMovement : MonoBehaviour {
 			ChangePosition();
 			ChangeRotation();
 			/*/
-			if(OPTION.have_ball)
-			{
-				Pass_to_another_PlayerB(contr.OPTIONS_FOR_PLAYERS.test_Zenor.transform.position);
-			}
 		}
 		if(OPTION.have_ball)
 		{
-			ball_con.SetPosition(ball_position[indexBallpos]);
-			ball_con.SetRotation(transform);
 		}
 	}
 	//===========================================Pick=Up===================================================
@@ -268,6 +265,10 @@ public partial class PlayerMovement : MonoBehaviour {
 		{
 			gameObject.name="Player";
 		}
+	}
+	public bool is_Try_to_Pass()
+	{
+		return OPTION.try_to_pass;
 	}
 	//======================Jump==================================
 	void setJumpSpeed(float jspeed)
@@ -437,8 +438,8 @@ public partial class PlayerMovement : MonoBehaviour {
 		}
 		current_speedB = getVector_of_Speed (pos - transform.position,
 		                                  speeds_of_Ball [Index_for_currentPassB],
-		                                  C [0]);
-		
+		                                     getAngel(C[0],speeds_of_Ball[Index_for_currentPassB]));
+
 		state=State_of_Player.Pass;
 		anim.SetBool(hash.bool_pass,true);
 	}
@@ -471,13 +472,13 @@ public partial class PlayerMovement : MonoBehaviour {
 	void Ball_Stay(Collider other)
 	{
 			//print ("onTriggerStay:"+other.name);
-		if (!OPTION.have_ball && other.tag == Tags.ball) 
+		if (!OPTION.have_ball && other.tag == Tags.ball&&(OPTION.search_ball||!OPTION.isBot)) 
 		{
 			for(int i=0;i<arms.Length;i++)
 			{
 				arms[i].postion_of_ball=other.transform.position;
 			}
-			if (ball_con.getState () != State_of_Ball.Player && Input.GetMouseButton (1)) 
+			if (ball_con.getState () != State_of_Ball.Player && (Input.GetMouseButton (1)||OPTION.isBot)) 
 			{
 				getBall();
 			}
@@ -485,13 +486,17 @@ public partial class PlayerMovement : MonoBehaviour {
 	}
 	void getBall()
 	{
+		ball_con.SetPosition(ball_position[indexBallpos]);
+		ball_con.SetRotation(transform); 
 		ball_con.Take ();
+		contr.setCurrentPlayerWB (this);
 		OPTION.have_ball = true;
 		anim.SetBool (hash.bool_ball, true);
 		for(int i=0;i<arms.Length;i++)
 		{
 			arms[i].setMyPresions(false);
 		}
+		OPTION.pass_time = false;
 	}
 	void Ball_Exit(Collider other)
 	{
@@ -560,7 +565,26 @@ public partial class PlayerMovement : MonoBehaviour {
 		public int Index_Of_Mouse_Button;
 		public float MouseLock;
 		public bool isBot;
-		public bool have_ball;
+		bool _have_ball;
+		public bool have_ball {
+			get{return _have_ball;}
+			set
+			{
+				if(value)
+				{
+					search_ball=false;
+				}
+				else
+				{
+					try_to_pass=false;
+					pass_time=false;
+				}
+				_have_ball=value;
+			}
+		}
+		public bool search_ball;
+		internal bool try_to_pass;
+		internal bool pass_time;
 	}
 	[System.Serializable]
 	public struct Children_Transform
@@ -570,9 +594,11 @@ public partial class PlayerMovement : MonoBehaviour {
 	[System.Serializable]
 	public struct Action_Collider
 	{
-		public Collider_Action Ball;
+		public Collider_Action Ball_1;
+		public Collider_Action Ball_2;
 		public Collider_Action Fall;
 		public Collider_Action Navigation;
+		public Collider_Action Number_of_Enemy_Team;
 	}
 	[System.Serializable]
 	public struct Scripts
@@ -581,30 +607,6 @@ public partial class PlayerMovement : MonoBehaviour {
 	}
 	[System.Serializable]
 	public enum Angle_Pass{Long_Flight,Short_Flight};
-	public class Oponents
-	{
-		public Transform Left_Oponent;
-		public Transform Right_Oponent;
-		public float distanceLeft;
-		public float distanceRight;
-		public void Update()
-		{
-			distanceLeft = Lenght (Left_Oponent);
-			distanceRight = Lenght (Right_Oponent);
-		}
-		public float Lenght(Transform oponent)
-		{
-			return 0;
-			/*/
-			Vector3 point_1 = transform.position;
-			Vector3 point_2 = point_1 + transform.forward;
-			float delta_x = point_2.x - point_1.x;
-			float delta_z = point_1.z - point_2.z;
-			return ((delta_z)*oponent.position.x+(delta_x)*oponent.position.z+(point_1.x*point_2.z+point_2.x*point_1.z))/
-				(Mathf.Sqrt(delta_x*delta_x+delta_z*delta_z));
-			/*/
-		}
-	}
 }
 /*/
 public float turnSmoothing = 1f;   // A smoothing value for turning the player.

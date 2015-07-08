@@ -84,6 +84,7 @@ public class BallController : MonoBehaviour {
 	public void Take()
 	{
 		state = State_of_Ball.Player;
+		rigidbody.isKinematic = true;
 	}
 
 }

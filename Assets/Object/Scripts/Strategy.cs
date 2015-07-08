@@ -191,6 +191,10 @@ public partial class Strategy : MonoBehaviour
 		{
 			get{ return _isWork;}
 		}
+		public bool Action_With_Ball
+		{
+			get{return currentAction.WithBall;}
+		}
 		public Action currentAction
 		{
 			get
@@ -341,6 +345,17 @@ public partial class Strategy : MonoBehaviour
 				return false;
 			}
 		}
+		public void Time_to_Next_Action()
+		{
+			currentAction.WithBall = false;
+			if(currentAction.getName_of_Action()!=Action.name_of_Action.Move)
+			{
+				if(!_Next_Action())
+				{
+					return;
+				}
+			}
+		}
 		public void Start_Game()
 		{
 			MonoBehaviour.print ("start");
@@ -366,15 +381,10 @@ public partial class Strategy : MonoBehaviour
 			//MonoBehaviour.print ("strategyPoint:"+strategyPoint.ToString ());
 			if(currentAction.endPlay)
 			{
-				currentIndex_of_Action++;
-				if(currentIndex_of_Action>=getLenght())
+				if(!_Next_Action())
 				{
-					_isWork=false;
-					//MonoBehaviour.print("end Activitis..");
 					return new Vector3();
 				}
-				_newAction=true;
-				currentAction.StartPlay();
 				return getCurrentStrategyPoint();
 			}
 
@@ -390,18 +400,29 @@ public partial class Strategy : MonoBehaviour
 			Vector3 strategyPoint = currentAction.getCurrentStrategyPoint (other_player);
 			if(currentAction.endPlay)
 			{
-				currentIndex_of_Action++;
-				if(currentIndex_of_Action>=getLenght())
+				if(!_Next_Action())
 				{
-					_isWork=false;
-					//MonoBehaviour.print("end Activitis..");
 					return new Vector3();
 				}
-				_newAction=true;
-				currentAction.StartPlay();
 				return getCurrentStrategyPoint(other_player);
 			}
 			return strategyPoint;
+		}
+		private bool _Next_Action()
+		{
+			currentIndex_of_Action++;
+			if(currentIndex_of_Action>=getLenght())
+			{
+				_isWork=false;
+				//MonoBehaviour.print("end Activitis..");
+				return false;
+			}
+			else
+			{
+				_newAction=true;
+				currentAction.StartPlay();
+			}
+			return true;
 		}
 		//=====================================Builder=====================
 		public static Action createAction(string _name)
@@ -522,6 +543,10 @@ public partial class Strategy : MonoBehaviour
 		public string getName()
 		{
 			return name.ToString ();
+		}
+		public name_of_Action getName_of_Action()
+		{
+			return name;
 		}
 		public void WhereIsMyBall ()
 		{

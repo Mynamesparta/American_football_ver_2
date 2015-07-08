@@ -19,7 +19,9 @@ public class Game_Controller : MonoBehaviour {
 	public event nullFunction EndPlay;
 	private Canvas canvas;
 	private List<PlayerMovement> BlackTeam,WhiteTeam;
+	private List<PlayerMovement> Players_Action_WB;//люди, які чекають на подію м'яча
 	private PlayerMovement current_player;
+	private PlayerMovement current_player_WB;// ігрок з м'ячем
 	// Use this for initialization
 	void Awake () 
 	{
@@ -32,6 +34,7 @@ public class Game_Controller : MonoBehaviour {
 		WhiteTeam = new List<PlayerMovement> ();
 		OPTIONS.Black_transform_gc=new Transform_GC[OPTIONS.size_of_team];
 		OPTIONS.White_transform_gc=new Transform_GC[OPTIONS.size_of_team];
+		Players_Action_WB = new List<PlayerMovement> ();
 		int a;
 		for(int i=0;i<OPTIONS.size_of_team;i++)
 		{
@@ -268,6 +271,10 @@ public class Game_Controller : MonoBehaviour {
 		SCRIPTS.main_camera.setCurrentObject (current_player.gameObject);
 		//current_player.setPick
 	}
+	public void setCurrentPlayerWB(PlayerMovement player)
+	{
+		current_player_WB = player;
+	}
 	//==========================================Strategy===========================================
 	public List<PlayerMovement> getCurrentTeam()
 	{
@@ -291,6 +298,34 @@ public class Game_Controller : MonoBehaviour {
 		//MonoBehaviour.print ("Hello:"+pos.ToString ());
 		pos.y = 0;
 		return pos;
+	}
+	public void Add_Player_AWB(PlayerMovement player)
+	{
+		if (player.team != current_player_WB.team)
+			return;
+		Players_Action_WB.Add (player);
+		if(current_player_WB!=null&&current_player_WB.is_Try_to_Pass())
+		{
+			current_player_WB.new_Players_Strategy_Pass(Players_Action_WB);
+		}
+	}
+	public void Remove_Player_AWB(PlayerMovement player)
+	{
+		if (player.team != current_player_WB.team)
+			return;
+		Players_Action_WB.Remove (player);
+	}
+	public List<PlayerMovement> getPlayer_AWB()
+	{
+		return Players_Action_WB;
+	}
+	public void Clear_Player_AWB()
+	{
+		for(int i=0;i<Players_Action_WB.Count;i++)
+		{
+			//Players_Action_WB[i].
+		}
+		Players_Action_WB.Clear ();
 	}
 	//===============================struct======================
 	[System.Serializable]
@@ -350,6 +385,7 @@ public class Game_Controller : MonoBehaviour {
 		public PlayerMovement test_Zenor;
 		public PlayerMovement.Angle_Pass angle;
 		public bool Time_to_Strategy;
+		public float min_angle_for_Rot;
 	}
 	[System.Serializable]
 	public struct Transform_GC

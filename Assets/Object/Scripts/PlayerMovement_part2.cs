@@ -9,12 +9,36 @@ public partial class PlayerMovement : MonoBehaviour
 	internal Transform oponent=null;
 	internal Vector3 newPosition;
 	internal float rot, abs_rot;
+	private int _number_of_Enemy_Team=0;
+	public int Number_of_Enemy_Team
+	{
+		get{return _number_of_Enemy_Team;}
+	}
 	private void BotTime()
 	{
 		if (current_action == null)
 			return;
 		if (!current_action.isWork)
 			return;
+		if(OPTION.pass_time)
+		{
+			if(Ideal_player_for_pass!=null)
+			{
+				Vector3 vec=Ideal_player_for_pass.transform.position-transform.position;
+				if(Vector3.Angle(vec,transform.forward)<contr.OPTIONS_FOR_PLAYERS.min_angle_for_Rot)
+				{
+					transform.LookAt(Ideal_player_for_pass.transform);
+					if(OPTION.have_ball)
+					{
+						Pass_to_another_PlayerB(Ideal_player_for_pass.transform.position);
+					}
+				}
+				else
+				{
+					MovementManagement(takeRot (transform.position+vec),0);
+				}
+			}
+		}
 		//if(oponent==null)
 		_oponent_ = Time_for_Tangency ();
 		if(_oponent_==null)
@@ -34,6 +58,10 @@ public partial class PlayerMovement : MonoBehaviour
 			{
 				_oponent_=null;
 			}
+		}
+		if(current_action.newAction)
+		{
+			Time_for_New_ActionSP();
 		}
 		rot=takeRot (newPosition);
 		abs_rot=Mathf.Abs(rot);
@@ -219,5 +247,105 @@ public partial class PlayerMovement : MonoBehaviour
 		if (Vector3.Distance (point, deltaPoint) > Vector3.Distance (point, transform.position))
 			return false;
 		return distance (point, line, point_in_line) < contr.OPTIONS.min_radius_of_Tangency;
+	}
+	//======================================Strategy=Action=====================================================
+	void Time_for_New_ActionSP()//StrategyPass
+	{
+		if(!OPTION.have_ball)
+		{
+			if(OPTION.search_ball&&!current_action.Action_With_Ball)
+			{
+				contr.Remove_Player_AWB(this);
+			}
+			OPTION.search_ball=current_action.Action_With_Ball;
+			if(OPTION.search_ball)
+			{
+				contr.Add_Player_AWB(this);
+			}
+		}
+		else
+		{
+			List<PlayerMovement> players=contr.getPlayer_AWB();
+			if(Time_Strategy_Pass(players))//;
+			//
+			{
+				contr.Clear_Player_AWB();
+				current_action.Time_to_Next_Action();
+				//cont
+			}
+			//
+		}
+	}
+	internal PlayerMovement Ideal_player_for_pass;
+	bool Time_Strategy_Pass(List<PlayerMovement> players)
+	{
+		if (players.Count == 0)
+			return false;
+		int i = 0;
+		for(;i<players.Count;i++)
+		{
+			if(I_Can_Pass(players[i].transform.position))
+			{
+				Ideal_player_for_pass=players[i];
+				break;
+			}
+		}
+		if (i >= players.Count)
+			return false;
+		for(;i<players.Count;i++)
+		{
+			if(players[i].Number_of_Enemy_Team < Ideal_player_for_pass.Number_of_Enemy_Team
+			   &&I_Can_Pass(players[i].transform.position))
+			{
+				Ideal_player_for_pass=players[i];
+			}
+		}
+		OPTION.pass_time = true;
+		Ideal_player_for_pass.Pass_Time (this);
+		return true;
+
+	}
+	public void new_Players_Strategy_Pass(List<PlayerMovement> players)
+	{
+		if(Time_Strategy_Pass(players))//;
+		//
+		{
+			contr.Clear_Player_AWB();
+			current_action.Time_to_Next_Action();
+			//cont
+		}
+		//
+	}
+	public void Pass_Time(PlayerMovement player)
+	{
+		Ideal_player_for_pass = player;
+		OPTION.pass_time = true;
+	}
+	public void Time_To_Next_Action()
+	{
+		current_action.Time_to_Next_Action ();
+	}
+	void Number_of_ET_Enter(Collider other)
+	{
+		if(other.tag!=Tags.player)
+			return;
+		if(!other.GetComponent<Armature>().itsMyTeam(team))
+		{
+			_number_of_Enemy_Team++;
+		}
+	}
+	void Number_of_ET_Exit(Collider other)
+	{
+		if(other.tag!=Tags.player)
+			return;
+		if(!other.GetComponent<Armature>().itsMyTeam(team))
+		{
+			_number_of_Enemy_Team--;
+		}
+		if(_number_of_Enemy_Team<0)
+		{
+			MonoBehaviour.print("Something wrong:_number_of_Enemy_Team < 0");
+			_number_of_Enemy_Team=0;
+		}
 	}
 }
