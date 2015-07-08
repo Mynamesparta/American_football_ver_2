@@ -28,6 +28,7 @@ public partial class Strategy : MonoBehaviour
 		}
 		public override void BuildTime(bool b)
 		{
+			MonoBehaviour.print ("Build Time:" + b.ToString ());
 			line.setBuildTime (b);
 			if(b)
 			{
@@ -153,6 +154,7 @@ public partial class Strategy : MonoBehaviour
 			line=(GameObject.Instantiate(Clone_of_line)as GameObject).GetComponent<Line>();
 			//r=PlayerMovement.contr.OPTIONS.min_radius_of_Tangency;
 			updateWithBall();
+			MonoBehaviour.print("Welcome to Action MOve");
 		}
 		public Vector3 currentPoint
 		{

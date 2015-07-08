@@ -134,6 +134,7 @@ public class Line : MonoBehaviour
 			if(Input.GetMouseButtonDown(0))
 			{
 				timer=0;
+				MonoBehaviour.print("go go go!!!");
 			}
 
 			if(Input.GetMouseButton(0))

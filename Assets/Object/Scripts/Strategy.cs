@@ -367,7 +367,7 @@ public partial class Strategy : MonoBehaviour
 			_isWork = true;
 			player.transform.position =  list_of_Action[0].startPos;
 			list_of_Action [currentIndex_of_Action].StartPlay ();
-			_newAction = false;
+			_newAction = true;
 		}
 		public Vector3 getCurrentStrategyPoint()
 		{

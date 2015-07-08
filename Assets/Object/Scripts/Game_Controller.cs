@@ -80,7 +80,10 @@ public class Game_Controller : MonoBehaviour {
 		SCRIPTS.strategy.AwakeStaticDate ();
 		SCRIPTS.strategy.Ini ();
 		if(WhiteTeam.Count>0)
+		{
 			setCurrentPlayer (WhiteTeam [0]);
+			WhiteTeam[0].getBall();
+		}
 	}
 	void OnApplicationQuit()
 	{
@@ -256,6 +259,12 @@ public class Game_Controller : MonoBehaviour {
 			return;
 		if (Zenor.team != currentTeam)
 			return;
+		if (SCRIPTS.pickUp.Zenor != null) 
+		{
+			MonoBehaviour.print (SCRIPTS.pickUp.Zenor.name + "==" + Zenor.name);
+			if (SCRIPTS.pickUp.Zenor.name == Zenor.name)
+				return;
+		}
 		SCRIPTS.pickUp.Zenor = Zenor;
 		SCRIPTS.pickUp.isWork = true;
 		SCRIPTS.strategy.SetCurrentActivities (Zenor);
@@ -301,7 +310,8 @@ public class Game_Controller : MonoBehaviour {
 	}
 	public void Add_Player_AWB(PlayerMovement player)
 	{
-		if (player.team != current_player_WB.team)
+
+		if (player.team != currentTeam)
 			return;
 		Players_Action_WB.Add (player);
 		if(current_player_WB!=null&&current_player_WB.is_Try_to_Pass())
@@ -323,7 +333,7 @@ public class Game_Controller : MonoBehaviour {
 	{
 		for(int i=0;i<Players_Action_WB.Count;i++)
 		{
-			//Players_Action_WB[i].
+			//Players_Action_WB[i].NextAction();
 		}
 		Players_Action_WB.Clear ();
 	}

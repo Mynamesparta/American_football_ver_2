@@ -89,7 +89,7 @@ public partial class PlayerMovement : MonoBehaviour {
 		{
 			return;
 		}
-		if(!contr.OPTIONS.All_Bot&&!OPTION.isBot)
+		if(!OPTION.isBot)
 		{
 			float rot = Input.GetAxis("Rotation");
 			float fow = Input.GetAxis("Forward");
@@ -122,7 +122,7 @@ public partial class PlayerMovement : MonoBehaviour {
 	void OnMouseOver()
 	{
 		//MonoBehaviour.print("Welcome");
-		if(Input.GetMouseButton(OPTION.Index_Of_Mouse_Button))
+		if(!OPTION.isBlockPickUp&&Input.GetMouseButton(OPTION.Index_Of_Mouse_Button))
 		{
 			SCRIPTS.contr.PickMe(this);
 		}
@@ -195,7 +195,7 @@ public partial class PlayerMovement : MonoBehaviour {
 				state=State_of_Player.Jump;
 			}
 			//=============================to=Pass=========
-			if(Input.GetMouseButtonDown(mouseIndex)&&anim.GetBool(hash.bool_ball))
+			if(!OPTION.isBot&&OPTION.have_ball&&Input.GetMouseButtonDown(mouseIndex))
 			{
 				state=State_of_Player.Pass;
 				anim.SetBool(hash.bool_pass,true);
@@ -472,7 +472,7 @@ public partial class PlayerMovement : MonoBehaviour {
 	void Ball_Stay(Collider other)
 	{
 			//print ("onTriggerStay:"+other.name);
-		if (!OPTION.have_ball && other.tag == Tags.ball&&(OPTION.search_ball||!OPTION.isBot)) 
+		if (!OPTION.have_ball && other.tag == Tags.ball&&(OPTION.search_ball)) 
 		{
 			for(int i=0;i<arms.Length;i++)
 			{
@@ -484,7 +484,7 @@ public partial class PlayerMovement : MonoBehaviour {
 			}
 		}
 	}
-	void getBall()
+	public void getBall()
 	{
 		ball_con.SetPosition(ball_position[indexBallpos]);
 		ball_con.SetRotation(transform); 
@@ -564,7 +564,17 @@ public partial class PlayerMovement : MonoBehaviour {
 		public bool isBlockPickUp;
 		public int Index_Of_Mouse_Button;
 		public float MouseLock;
-		public bool isBot;
+		bool _isBot;
+		public bool isBot
+		{
+			get
+			{
+				if(contr!=null)
+					return contr.OPTIONS.All_Bot||_isBot;
+				return _isBot;
+			}
+			set{ _isBot = value;}
+		}
 		bool _have_ball;
 		public bool have_ball {
 			get{return _have_ball;}

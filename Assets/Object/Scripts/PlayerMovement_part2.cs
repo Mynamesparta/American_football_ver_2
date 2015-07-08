@@ -24,20 +24,20 @@ public partial class PlayerMovement : MonoBehaviour
 		{
 			if(Ideal_player_for_pass!=null)
 			{
+				//MonoBehaviour.print(name+":pass time");
 				Vector3 vec=Ideal_player_for_pass.transform.position-transform.position;
+				MonoBehaviour.print(name+"->"+Ideal_player_for_pass.name);
 				if(Vector3.Angle(vec,transform.forward)<contr.OPTIONS_FOR_PLAYERS.min_angle_for_Rot)
 				{
-					transform.LookAt(Ideal_player_for_pass.transform);
+					//transform.LookAt(Ideal_player_for_pass.transform);
 					if(OPTION.have_ball)
 					{
 						Pass_to_another_PlayerB(Ideal_player_for_pass.transform.position);
 					}
 				}
-				else
-				{
-					MovementManagement(takeRot (transform.position+vec),0);
-				}
+				MovementManagement(takeRot (transform.position+vec),0);
 			}
+			return;
 		}
 		//if(oponent==null)
 		_oponent_ = Time_for_Tangency ();
@@ -61,6 +61,7 @@ public partial class PlayerMovement : MonoBehaviour
 		}
 		if(current_action.newAction)
 		{
+			MonoBehaviour.print("new Action");
 			Time_for_New_ActionSP();
 		}
 		rot=takeRot (newPosition);
@@ -122,7 +123,7 @@ public partial class PlayerMovement : MonoBehaviour
 			return;
 		}
 		number_of_Opponent--;
-		MonoBehaviour.print (number_of_Opponent);
+		//MonoBehaviour.print (number_of_Opponent);
 		list_of_Opponent.Remove (player);
 	}
 	public Vector3 getPoints_of_Tangency(Transform O,Vector3 A)
@@ -251,6 +252,7 @@ public partial class PlayerMovement : MonoBehaviour
 	//======================================Strategy=Action=====================================================
 	void Time_for_New_ActionSP()//StrategyPass
 	{
+		MonoBehaviour.print (name+":Time_for_New_ActionSP");
 		if(!OPTION.have_ball)
 		{
 			if(OPTION.search_ball&&!current_action.Action_With_Ball)
@@ -265,16 +267,23 @@ public partial class PlayerMovement : MonoBehaviour
 		}
 		else
 		{
-			List<PlayerMovement> players=contr.getPlayer_AWB();
-			if(Time_Strategy_Pass(players))//;
-			//
+			OPTION.try_to_pass=current_action.Action_With_Ball;
+			if(OPTION.try_to_pass)
 			{
-				contr.Clear_Player_AWB();
-				current_action.Time_to_Next_Action();
-				//cont
+				List<PlayerMovement> players=contr.getPlayer_AWB();
+				if(Time_Strategy_Pass(players))//;
+				//
+				{
+					contr.Clear_Player_AWB();
+					//cont
+				}
+				//
 			}
-			//
 		}
+	}
+	public void NextAction()
+	{
+		current_action.Time_to_Next_Action();
 	}
 	internal PlayerMovement Ideal_player_for_pass;
 	bool Time_Strategy_Pass(List<PlayerMovement> players)
@@ -311,7 +320,7 @@ public partial class PlayerMovement : MonoBehaviour
 		//
 		{
 			contr.Clear_Player_AWB();
-			current_action.Time_to_Next_Action();
+			//current_action.Time_to_Next_Action();
 			//cont
 		}
 		//
