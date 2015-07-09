@@ -69,6 +69,7 @@ public partial class PlayerMovement : MonoBehaviour {
 
 		OPTION.isBot=true;
 		OPTION.have_ball=false;
+		OPTION._this = this;
 	}
 	void Start()
 	{
@@ -352,7 +353,7 @@ public partial class PlayerMovement : MonoBehaviour {
 	}
 	public Vector3 getVector_of_Speed(Vector3 direction,float speed, float angle)
 	{
-		MonoBehaviour.print ("tan(" + angle + ")=" + Mathf.Tan (angle));
+		//MonoBehaviour.print ("tan(" + angle + ")=" + Mathf.Tan (angle));
 		Vector3 result = new Vector3 (direction.x, Mathf.Sqrt (direction.x * direction.x + direction.z * direction.z)*Mathf.Tan(angle), direction.z);
 		result = result * (speed / Mathf.Sqrt (result.x*result.x+result.y*result.y+result.z*result.z));
 		return result;
@@ -587,14 +588,17 @@ public partial class PlayerMovement : MonoBehaviour {
 				else
 				{
 					try_to_pass=false;
-					pass_time=false;
 				}
 				_have_ball=value;
+				pass_time=false;
+				if(_this!=null)
+					_this.Time_To_Next_Action();
 			}
 		}
 		public bool search_ball;
 		internal bool try_to_pass;
 		internal bool pass_time;
+		internal PlayerMovement _this;
 	}
 	[System.Serializable]
 	public struct Children_Transform

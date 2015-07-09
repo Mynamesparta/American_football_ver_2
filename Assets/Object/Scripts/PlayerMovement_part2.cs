@@ -9,6 +9,7 @@ public partial class PlayerMovement : MonoBehaviour
 	internal Transform oponent=null;
 	internal Vector3 newPosition;
 	internal float rot, abs_rot;
+	internal bool b = false;
 	private int _number_of_Enemy_Team=0;
 	public int Number_of_Enemy_Team
 	{
@@ -26,19 +27,21 @@ public partial class PlayerMovement : MonoBehaviour
 			{
 				//MonoBehaviour.print(name+":pass time");
 				Vector3 vec=Ideal_player_for_pass.transform.position-transform.position;
-				MonoBehaviour.print(name+"->"+Ideal_player_for_pass.name);
+				//MonoBehaviour.print(name+"->"+Ideal_player_for_pass.name);
 				if(Vector3.Angle(vec,transform.forward)<contr.OPTIONS_FOR_PLAYERS.min_angle_for_Rot)
 				{
 					//transform.LookAt(Ideal_player_for_pass.transform);
-					if(OPTION.have_ball)
+					if(OPTION.have_ball&&b)
 					{
 						Pass_to_another_PlayerB(Ideal_player_for_pass.transform.position);
+						b=false;
 					}
 				}
 				MovementManagement(takeRot (transform.position+vec),0);
 			}
 			return;
 		}
+		//MonoBehaviour.print ("okkkk....................");
 		//if(oponent==null)
 		_oponent_ = Time_for_Tangency ();
 		if(_oponent_==null)
@@ -275,6 +278,7 @@ public partial class PlayerMovement : MonoBehaviour
 				//
 				{
 					contr.Clear_Player_AWB();
+					b=true;
 					//cont
 				}
 				//
@@ -320,6 +324,7 @@ public partial class PlayerMovement : MonoBehaviour
 		//
 		{
 			contr.Clear_Player_AWB();
+			b=true;
 			//current_action.Time_to_Next_Action();
 			//cont
 		}

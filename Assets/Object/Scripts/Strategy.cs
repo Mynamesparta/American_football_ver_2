@@ -185,7 +185,7 @@ public partial class Strategy : MonoBehaviour
 		public Vector3 startPosition;
 		public static Strategy strategy;
 		List<Action> list_of_Action = new List<Action> ();
-		bool _isWork;
+		bool _isWork=false;
 		int currentIndex_of_Action;
 		public bool isWork
 		{
@@ -347,6 +347,8 @@ public partial class Strategy : MonoBehaviour
 		}
 		public void Time_to_Next_Action()
 		{
+			if (!_isWork)
+				return;
 			currentAction.WithBall = false;
 			if(currentAction.getName_of_Action()!=Action.name_of_Action.Move)
 			{
