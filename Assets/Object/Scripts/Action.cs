@@ -94,7 +94,7 @@ public partial class Strategy : MonoBehaviour
 			while(Vector3.Distance(player.transform.position,currentPoint)<Game_Controller.current_contr.OPTIONS.min_distance)
 			{
 				current_Index++;
-				if(current_Index>=line.Count-1)
+				if(current_Index>=line.Count)
 				{
 					_endPlay=true;
 					MonoBehaviour.print("end Action");
@@ -111,7 +111,7 @@ public partial class Strategy : MonoBehaviour
 			while(Vector3.Distance(player.transform.position,currentPoint)<Game_Controller.current_contr.OPTIONS.min_distance)
 			{
 				current_Index++;
-				if(current_Index>=line.Count-1)
+				if(current_Index>=line.Count)
 				{
 					_endPlay=true;
 					MonoBehaviour.print("end Action");

@@ -82,7 +82,8 @@ public class Game_Controller : MonoBehaviour {
 		if(WhiteTeam.Count>0)
 		{
 			setCurrentPlayer (WhiteTeam [0]);
-			WhiteTeam[0].getBall();
+			if(OPTIONS.Player_who_have_ball!=-1)
+				WhiteTeam[OPTIONS.Player_who_have_ball].getBall();
 		}
 	}
 	void OnApplicationQuit()
@@ -164,7 +165,7 @@ public class Game_Controller : MonoBehaviour {
 		OBJECTS.Main_Camera.depth = 1f;
 		OBJECTS.Strategy_Camera.depth = 0f;
 		state = State_of_Game_Controller.Play;
-		if(false&&StartPlay!=null)
+		if(StartPlay!=null)
 		{
 			StartPlay();
 		}
@@ -321,7 +322,7 @@ public class Game_Controller : MonoBehaviour {
 	}
 	public void Remove_Player_AWB(PlayerMovement player)
 	{
-		if (player.team != current_player_WB.team)
+		if (current_player_WB==null||player.team != current_player_WB.team)
 			return;
 		Players_Action_WB.Remove (player);
 	}
@@ -387,6 +388,8 @@ public class Game_Controller : MonoBehaviour {
 		public bool TestDestroy;
 		public float min_radius_of_Tangency;
 		public float max_radius_of_Tangency;
+		[Range(-1, 10)]
+		public int Player_who_have_ball;
 	}
 	[System.Serializable]
 	public struct Options_for_Players
@@ -396,6 +399,8 @@ public class Game_Controller : MonoBehaviour {
 		public PlayerMovement.Angle_Pass angle;
 		public bool Time_to_Strategy;
 		public float min_angle_for_Rot;
+		[Range(0f, 1f)]
+		public float max_fow_AWB;
 	}
 	[System.Serializable]
 	public struct Transform_GC

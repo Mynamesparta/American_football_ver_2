@@ -1,14 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Object\Scripts\PlayerMovement_part2.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Object\Scripts\Game_Controller.cs">
     <Files>
-      <File FileName="Assets\Object\Scripts\PlayerMovement.cs" Line="592" Column="21" />
+      <File FileName="Assets\Object\Scripts\PlayerMovement.cs" Line="102" Column="6" />
       <File FileName="Assets\Object\Scripts\Line.cs" Line="1" Column="1" />
-      <File FileName="Assets\Object\Scripts\Strategy.cs" Line="1" Column="1" />
-      <File FileName="Assets\Object\Scripts\Game_Controller.cs" Line="1" Column="1" />
+      <File FileName="Assets\Object\Scripts\Strategy.cs" Line="525" Column="22" />
+      <File FileName="Assets\Object\Scripts\Game_Controller.cs" Line="168" Column="6" />
       <File FileName="Assets\Object\Scripts\BallController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Object\Scripts\PlayerMovement_part2.cs" Line="27" Column="34" />
-      <File FileName="Assets\Object\Scripts\Action.cs" Line="1" Column="1" />
+      <File FileName="Assets\Object\Scripts\PlayerMovement_part2.cs" Line="91" Column="45" />
+      <File FileName="Assets\Object\Scripts\Action.cs" Line="54" Column="16" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

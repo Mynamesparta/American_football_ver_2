@@ -199,6 +199,7 @@ public partial class Strategy : MonoBehaviour
 		{
 			get
 			{
+				MonoBehaviour.print(currentIndex_of_Action);
 				return list_of_Action[currentIndex_of_Action];
 			}
 		}
@@ -412,6 +413,7 @@ public partial class Strategy : MonoBehaviour
 		}
 		private bool _Next_Action()
 		{
+			MonoBehaviour.print ("Next Action:" + player.name);
 			currentIndex_of_Action++;
 			if(currentIndex_of_Action>=getLenght())
 			{
@@ -517,7 +519,11 @@ public partial class Strategy : MonoBehaviour
 		public bool WithBall
 		{
 			get{return _WithBall;}
-			set{ _WithBall = value;}
+			set
+			{ 
+				_WithBall = value;
+				updateWithBall();
+			}
 		}
 
 		public Vector3 startPos { 

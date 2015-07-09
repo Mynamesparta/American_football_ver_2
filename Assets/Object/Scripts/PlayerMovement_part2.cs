@@ -20,7 +20,10 @@ public partial class PlayerMovement : MonoBehaviour
 		if (current_action == null)
 			return;
 		if (!current_action.isWork)
+		{
+			MovementManagement(0,0);
 			return;
+		}
 		if(OPTION.pass_time)
 		{
 			if(Ideal_player_for_pass!=null)
@@ -33,10 +36,12 @@ public partial class PlayerMovement : MonoBehaviour
 					//transform.LookAt(Ideal_player_for_pass.transform);
 					if(OPTION.have_ball&&b)
 					{
+						Ideal_player_for_pass.Pass_Time (this);
 						Pass_to_another_PlayerB(Ideal_player_for_pass.transform.position);
 						b=false;
 					}
 				}
+				MonoBehaviour.print(name+":"+takeRot (transform.position+vec));
 				MovementManagement(takeRot (transform.position+vec),0);
 			}
 			return;
@@ -83,7 +88,13 @@ public partial class PlayerMovement : MonoBehaviour
 	}
 	public float takeRot(Vector3 point)
 	{
-		Quaternion qua = Quaternion.FromToRotation (transform.forward, point - transform.position);
+		Quaternion qua = Quaternion.FromToRotation (transform.forward, point - transform.position),
+		qua_1=Quaternion.FromToRotation (point - transform.position,transform.forward);
+		MonoBehaviour.print ("========================");
+		MonoBehaviour.print (qua.ToString ());
+		MonoBehaviour.print (qua_1.ToString ());
+		MonoBehaviour.print ("========================");
+		qua = Mathf.Abs( qua.y) < Mathf.Abs(qua_1.y) ? qua : qua_1;
 		float rot = qua.y / contr.OPTIONS.max_angul_for_StM;
 		rot = rot > 1 ? 1 : rot;
 		rot = rot < -1 ? -1 : rot;
@@ -314,7 +325,6 @@ public partial class PlayerMovement : MonoBehaviour
 			}
 		}
 		OPTION.pass_time = true;
-		Ideal_player_for_pass.Pass_Time (this);
 		return true;
 
 	}

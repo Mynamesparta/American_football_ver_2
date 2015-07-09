@@ -80,8 +80,12 @@ public partial class PlayerMovement : MonoBehaviour {
 		MonoBehaviour.print (result [1].ToString ());
 		/*/
 		speeds_of_Ball = contr.OPTIONS_FOR_PLAYERS.speeds_of_Ball;
+		contr.StartPlay += StartPlayGame;
 	}
-	
+	void StartPlayGame()
+	{
+		inPlay = true;
+	}
 	
 	void FixedUpdate ()
 	{
@@ -95,6 +99,7 @@ public partial class PlayerMovement : MonoBehaviour {
 			float rot = Input.GetAxis("Rotation");
 			float fow = Input.GetAxis("Forward");
 			MovementManagement(rot, fow);
+			//MonoBehaviour.print(Quaternion.FromToRotation(new Vector3(1,0,0),transform.forward).y);
 			/*/
 			Vector3 newPosition = current_action.getCurrentStrategyPoint ();
 			
@@ -143,6 +148,7 @@ public partial class PlayerMovement : MonoBehaviour {
 		Pick = b;
 	}
 	//==================================================================================================================
+	/*/
 	void Update()
 	{
 
@@ -151,11 +157,19 @@ public partial class PlayerMovement : MonoBehaviour {
 			MonoBehaviour.print("Hello");
 		}
 	}
+	/*/
 	void MovementManagement (float rot, float fow)
 	{
 		//MonoBehaviour.print(Name+"_angularspeed:"+rot+"*"+SPEED.maxAngularSpeed);
 		if(contr.OPTIONS.Stasis)
 			fow = 0;
+		else
+		{
+			if(fow>OPTION.max_fow)
+				fow=OPTION.max_fow;
+			if(fow<-OPTION.max_fow)
+				fow=-OPTION.max_fow;
+		}
 		//rot = Mathf.Sign (rot);
 		//MonoBehaviour.print ("for:" + fow + "rot:" + rot);
 		switch(state)
@@ -596,6 +610,18 @@ public partial class PlayerMovement : MonoBehaviour {
 			}
 		}
 		public bool search_ball;
+		public float max_fow
+		{
+			get
+			{
+				if(contr!=null&&(search_ball||try_to_pass))
+				{
+					return contr.OPTIONS_FOR_PLAYERS.max_fow_AWB;
+				}
+				return 1;
+			}
+		}
+
 		internal bool try_to_pass;
 		internal bool pass_time;
 		internal PlayerMovement _this;
