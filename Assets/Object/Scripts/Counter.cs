@@ -7,12 +7,12 @@ public class Counter : MonoBehaviour {
 	public Text text_counter_2;
 	public LineRenderer Ball_Line;
 	public Vector3[] pos_of_Ball_Line=new Vector3[2];
-	private float real_X;
+	private float _real_X=0;
 	private Game_Controller contr;
 	//public float const_coef_Foot_to_world_Point;
 	public Vector3 center
 	{
-		get{return new Vector3(real_X,0,0);}
+		get{return new Vector3(_real_X,0,0);}
 	}
 
 	public float float_counter_1
@@ -20,8 +20,8 @@ public class Counter : MonoBehaviour {
 		get{return _float_counter_1;}
 		set
 		{
-			real_X=value;
-			_float_counter_1=50-Mathf.Abs( value);//*const_coef_Foot_to_world_Point;
+			_real_X=value;
+			_float_counter_1=Normalized_Float(50-Mathf.Abs( value));//*const_coef_Foot_to_world_Point;
 			text_counter_1.text=_float_counter_1.ToString();
 			pos_of_Ball_Line[0].x=pos_of_Ball_Line[1].x=value;
 			Ball_Line.SetPosition(0,pos_of_Ball_Line[0]);
@@ -34,9 +34,16 @@ public class Counter : MonoBehaviour {
 		get{return _float_counter_2;}
 		set
 		{
-			_float_counter_2=Mathf.Abs(value)-_float_counter_1+50;//*const_coef_Foot_to_world_Point;
-			text_counter_2.text=_float_counter_2.ToString();
+			if(contr!=null)
+			{
+				_float_counter_2=Normalized_Float(((int)contr.currentSide )*(_real_X-value));
+				text_counter_2.text=_float_counter_2.ToString();
+			}
 		}
+	}
+	public float real_X
+	{
+		get{return _real_X;}
 	}
 
 	float _float_counter_1;
@@ -54,5 +61,10 @@ public class Counter : MonoBehaviour {
 	}
 	void Start()
 	{
+	}
+	public float Normalized_Float(float num)
+	{
+		int r = (int)(num * 100);
+		return ((float)r)/100;
 	}
 }

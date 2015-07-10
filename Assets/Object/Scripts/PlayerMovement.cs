@@ -81,10 +81,22 @@ public partial class PlayerMovement : MonoBehaviour {
 		/*/
 		speeds_of_Ball = contr.OPTIONS_FOR_PLAYERS.speeds_of_Ball;
 		contr.StartPlay += StartPlayGame;
+		contr.EndPlay += EndPlayGame;
+		contr.StartDown += StartDown;
+		contr.EndDown += EndDown;
 	}
 	void StartPlayGame()
 	{
 		inPlay = true;
+	}
+	void EndPlayGame()
+	{
+	}
+	void StartDown()
+	{
+	}
+	void EndDown()
+	{
 	}
 	
 	void FixedUpdate ()

@@ -16,6 +16,11 @@ public class Line : MonoBehaviour
 	{
 		list_of_points = new List<Vector3> ();
 		line_renderer = GetComponent<LineRenderer> ();
+		counter = Game_Controller.current_contr.SCRIPTS.counter;
+	}
+	public void Start()
+	{
+		counter = Game_Controller.current_contr.SCRIPTS.counter;
 	}
 	public void setColor(Color col)
 	{

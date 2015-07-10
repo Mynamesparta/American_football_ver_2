@@ -58,6 +58,7 @@
      <Compile Include="Assets\Object\Scripts\Hash_id.cs" />
      <Compile Include="Assets\Object\Scripts\IKGetBall.cs" />
      <Compile Include="Assets\Object\Scripts\Line.cs" />
+     <Compile Include="Assets\Object\Scripts\Markers.cs" />
      <Compile Include="Assets\Object\Scripts\Match_Constructor.cs" />
      <Compile Include="Assets\Object\Scripts\Pick_Up.cs" />
      <Compile Include="Assets\Object\Scripts\PlayerMovement.cs" />

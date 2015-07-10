@@ -88,13 +88,15 @@ public partial class PlayerMovement : MonoBehaviour
 	}
 	public float takeRot(Vector3 point)
 	{
-		Quaternion qua = Quaternion.FromToRotation (transform.forward, point - transform.position),
-		qua_1=Quaternion.FromToRotation (point - transform.position,transform.forward);
+		Quaternion qua = Quaternion.FromToRotation (transform.forward, point - transform.position);
+		//,qua_1=Quaternion.FromToRotation (point - transform.position,transform.forward);
+		/*/
 		MonoBehaviour.print ("========================");
 		MonoBehaviour.print (qua.ToString ());
 		MonoBehaviour.print (qua_1.ToString ());
 		MonoBehaviour.print ("========================");
-		qua = Mathf.Abs( qua.y) < Mathf.Abs(qua_1.y) ? qua : qua_1;
+		/*/
+		//qua = Mathf.Abs( qua.y) < Mathf.Abs(qua_1.y) ? qua : qua_1;
 		float rot = qua.y / contr.OPTIONS.max_angul_for_StM;
 		rot = rot > 1 ? 1 : rot;
 		rot = rot < -1 ? -1 : rot;

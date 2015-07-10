@@ -13,10 +13,14 @@ public class Game_Controller : MonoBehaviour {
 	public GameObject forTest;
 	public State_of_Game_Controller state;
 	public PlayerMovement.Team currentTeam;
+	public Side currentSide;
 	public static Game_Controller current_contr;
 	public delegate void  nullFunction();
 	public event nullFunction StartPlay;
 	public event nullFunction EndPlay;
+	public event nullFunction StartDown;
+	public event nullFunction EndDown;
+
 	private Canvas canvas;
 	private List<PlayerMovement> BlackTeam,WhiteTeam;
 	private List<PlayerMovement> Players_Action_WB;//люди, які чекають на подію м'яча
@@ -134,6 +138,12 @@ public class Game_Controller : MonoBehaviour {
 			break;
 		}
 		}
+		if(OPTIONS.Test_Down_End)
+		{
+			OPTIONS.Test_Down_End=false;
+			if(EndDown!=null)
+				EndDown();
+		}
 	} 
 	void Start()
 	{
@@ -174,6 +184,7 @@ public class Game_Controller : MonoBehaviour {
 			//MonoBehaviour.print ("Something Wrong: StartPlay==null");
 		}
 		canvas.inScene (name_of_Button.FileList, true);
+		canvas.inScene (name_of_Button.Counter, true);
 		ChoseStrategy (true);
 
 	}
@@ -390,6 +401,7 @@ public class Game_Controller : MonoBehaviour {
 		public float max_radius_of_Tangency;
 		[Range(-1, 10)]
 		public int Player_who_have_ball;
+		public bool Test_Down_End;
 	}
 	[System.Serializable]
 	public struct Options_for_Players
@@ -413,4 +425,7 @@ public class Game_Controller : MonoBehaviour {
 	{
 		public Animator ChoseStrategy;
 	}
+	[System.Serializable]
+	public enum Side{Left=-1,Right=1};
+
 }
