@@ -1,9 +1,9 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Object\Scripts\Markers.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Object\Scripts\Game_Controller.cs">
     <Files>
-      <File FileName="Assets\Object\Scripts\Markers.cs" Line="44" Column="59" />
-      <File FileName="Assets\Object\Scripts\Game_Controller.cs" Line="145" Column="15" />
+      <File FileName="Assets\Object\Scripts\Game_Controller.cs" Line="284" Column="2" />
+      <File FileName="Assets\Object\Scripts\Markers.cs" Line="1" Column="1" />
       <File FileName="Assets\Object\Scripts\BallController.cs" Line="1" Column="1" />
       <File FileName="Assets\Object\Scripts\Action.cs" Line="1" Column="1" />
       <File FileName="Assets\Object\Scripts\Counter.cs" Line="1" Column="1" />
