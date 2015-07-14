@@ -349,7 +349,8 @@ public partial class PlayerMovement : MonoBehaviour
 	}
 	public void Time_To_Next_Action()
 	{
-		current_action.Time_to_Next_Action ();
+		if(current_action!=null)
+			current_action.Time_to_Next_Action ();
 	}
 	void Number_of_ET_Enter(Collider other)
 	{
