@@ -7,7 +7,8 @@ public partial class PlayerMovement : MonoBehaviour {
 	public Children_Transform CHILDREN;
 	public Action_Collider COLLIDER;
 	public Scripts SCRIPTS;
-	public State_of_Player state=State_of_Player.Normal;
+	public State_of_Player state_of_player=State_of_Player.Normal;
+	public State_of_Pass state_of_pass=State_of_Pass.Hand;
 	public Team team;
 	public float Forse;
 	//public int maxForseWhenRun=5;
@@ -40,6 +41,7 @@ public partial class PlayerMovement : MonoBehaviour {
 	private bool inPlay=false;
 	private string _Name;
 	private static int[] speeds_of_Ball;
+	private static int[] speeds_of_Ball_Kick_off;
 
 	//private bool Take_Ball = false;
 	
@@ -80,6 +82,7 @@ public partial class PlayerMovement : MonoBehaviour {
 		MonoBehaviour.print (result [1].ToString ());
 		/*/
 		speeds_of_Ball = contr.OPTIONS_FOR_PLAYERS.speeds_of_Ball;
+		speeds_of_Ball_Kick_off = contr.OPTIONS_FOR_PLAYERS.speeds_of_Ball_Kick_off;
 		contr.StartPlay += StartPlayGame;
 		contr.EndPlay += EndPlayGame;
 		contr.StartDown += StartDown;
@@ -184,7 +187,7 @@ public partial class PlayerMovement : MonoBehaviour {
 		}
 		//rot = Mathf.Sign (rot);
 		//MonoBehaviour.print ("for:" + fow + "rot:" + rot);
-		switch(state)
+		switch(state_of_player)
 		{
 		case State_of_Player.Normal:
 		{
@@ -219,12 +222,12 @@ public partial class PlayerMovement : MonoBehaviour {
 				/*/
 				if(anim.GetInteger(hash.int_jump)==0)
 					anim.SetInteger(hash.int_jump,1);
-				state=State_of_Player.Jump;
+				state_of_player=State_of_Player.Jump;
 			}
 			//=============================to=Pass=========
 			if(!OPTION.isBot&&OPTION.have_ball&&Input.GetMouseButtonDown(mouseIndex))
 			{
-				state=State_of_Player.Pass;
+				state_of_player=State_of_Player.Pass;
 				anim.SetBool(hash.bool_pass,true);
 			}
 			break;
@@ -316,7 +319,7 @@ public partial class PlayerMovement : MonoBehaviour {
 	}
 	void endJump()
 	{
-		state=State_of_Player.Normal;
+		state_of_player=State_of_Player.Normal;
 		anim.SetInteger (hash.int_jump, 0);
 	}
 	//======================Pass===================================
@@ -342,16 +345,38 @@ public partial class PlayerMovement : MonoBehaviour {
 	}
 	void Pass()
 	{
-		if(false&&!OPTION.isBot)
+		if (ball_con == null)
+			return;
+		if(!OPTION.isBot)
 		{
-			if(IndexOfPassForse-1>=contr.OPTIONS_FOR_PLAYERS.speeds_of_Ball.Length)
+			switch(state_of_pass)
 			{
-				MonoBehaviour.print("Something wrong: IndexOfPassForse("+(IndexOfPassForse-1)+")>= speeds_of_Ball.Length("
-				                    +contr.OPTIONS_FOR_PLAYERS.speeds_of_Ball.Length);
+			case State_of_Pass.Hand:
+			{
+				if(IndexOfPassForse-1>=contr.OPTIONS_FOR_PLAYERS.speeds_of_Ball.Length)
+				{
+					MonoBehaviour.print("Something wrong: IndexOfPassForse("+(IndexOfPassForse-1)+")>= speeds_of_Ball.Length("
+					                    +contr.OPTIONS_FOR_PLAYERS.speeds_of_Ball.Length);
+				}
+				else
+				{
+					ball_con.Pass(Camera_controller.main_Camera.transform.forward*speeds_of_Ball[IndexOfPassForse-1]);
+				}
+				break;
 			}
-			else
+			case State_of_Pass.Kick_Off:
 			{
-				ball_con.Pass(Camera_controller.main_Camera.transform.forward*speeds_of_Ball[IndexOfPassForse-1]);
+				if(IndexOfPassForse-1>=contr.OPTIONS_FOR_PLAYERS.speeds_of_Ball_Kick_off.Length)
+				{
+					MonoBehaviour.print("Something wrong: IndexOfPassForse("+(IndexOfPassForse-1)+")>= speeds_of_Ball_Kick_off.Length("
+					                    +contr.OPTIONS_FOR_PLAYERS.speeds_of_Ball_Kick_off.Length);
+				}
+				else
+				{
+					ball_con.Pass(Camera_controller.main_Camera.transform.forward*speeds_of_Ball[IndexOfPassForse-1]);
+				}
+				break;
+			}
 			}
 		}
 		else
@@ -367,7 +392,7 @@ public partial class PlayerMovement : MonoBehaviour {
 	void endPass()
 	{
 		//print ("End Pass");
-		state = State_of_Player.Normal;
+		state_of_player = State_of_Player.Normal;
 	}
 	public float getMinSpeed(float l)
 	{
@@ -467,7 +492,7 @@ public partial class PlayerMovement : MonoBehaviour {
 		                                  speeds_of_Ball [Index_for_currentPassB],
 		                                     getAngel(C[0],speeds_of_Ball[Index_for_currentPassB]));
 
-		state=State_of_Player.Pass;
+		state_of_player=State_of_Player.Pass;
 		anim.SetBool(hash.bool_pass,true);
 	}
 	//=====================Fall======================================
@@ -505,7 +530,7 @@ public partial class PlayerMovement : MonoBehaviour {
 			{
 				arms[i].postion_of_ball=other.transform.position;
 			}
-			if (ball_con.getState () != State_of_Ball.Player && (Input.GetMouseButton (1)||OPTION.isBot)) 
+			if (ball_con!=null&&ball_con.getState () != State_of_Ball.Player && (Input.GetMouseButton (1)||OPTION.isBot)) 
 			{
 				getBall();
 			}
@@ -568,6 +593,8 @@ public partial class PlayerMovement : MonoBehaviour {
 	//==========================================================Options=struct===============================================
 	[System.Serializable]
 	public enum State_of_Player {Normal,Jump,Pass,Fall};
+	[System.Serializable]
+	public enum State_of_Pass {Hand,Kick_Off}
 	[System.Serializable]
 	public enum Team{Black,White}
 

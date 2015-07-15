@@ -83,12 +83,6 @@ public class Game_Controller : MonoBehaviour {
 		Strategy.canvas = canvas;
 		SCRIPTS.strategy.AwakeStaticDate ();
 		SCRIPTS.strategy.Ini ();
-		if(WhiteTeam.Count>0)
-		{
-			setCurrentPlayer (WhiteTeam [0]);
-			if(OPTIONS.Player_who_have_ball!=-1)
-				WhiteTeam[OPTIONS.Player_who_have_ball].getBall();
-		}
 	}
 	void OnApplicationQuit()
 	{
@@ -152,6 +146,12 @@ public class Game_Controller : MonoBehaviour {
 			canvas.gameObject.SetActive(true);
 			MonoBehaviour.print("First_Update");
 			First_Update=false;
+			if(WhiteTeam.Count>0)
+			{
+				setCurrentPlayer (WhiteTeam [0]);
+				if(OPTIONS.Player_who_have_ball!=-1)
+					WhiteTeam[OPTIONS.Player_who_have_ball].getBall();
+			}
 			if(!OPTIONS.isTime_for_Test_Play)
 				return;
 			SCRIPTS.files.Read (OPTIONS.name_of_File);
@@ -407,6 +407,7 @@ public class Game_Controller : MonoBehaviour {
 	public struct Options_for_Players
 	{
 		public int[] speeds_of_Ball;
+		public int[] speeds_of_Ball_Kick_off;
 		public PlayerMovement test_Zenor;
 		public PlayerMovement.Angle_Pass angle;
 		public bool Time_to_Strategy;

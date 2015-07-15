@@ -1,15 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Object\Scripts\PlayerMovement_part2.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Object\Scripts\PlayerMovement.cs">
     <Files>
-      <File FileName="Assets\Object\Scripts\PlayerMovement_part2.cs" Line="353" Column="4" />
-      <File FileName="Assets\Object\Scripts\Game_Controller.cs" Line="284" Column="2" />
+      <File FileName="Assets\Object\Scripts\PlayerMovement.cs" Line="1" Column="1" />
+      <File FileName="Assets\Object\Scripts\PlayerMovement_part2.cs" Line="1" Column="1" />
+      <File FileName="Assets\Object\Scripts\Game_Controller.cs" Line="1" Column="1" />
       <File FileName="Assets\Object\Scripts\Markers.cs" Line="1" Column="1" />
       <File FileName="Assets\Object\Scripts\BallController.cs" Line="1" Column="1" />
       <File FileName="Assets\Object\Scripts\Action.cs" Line="1" Column="1" />
       <File FileName="Assets\Object\Scripts\Counter.cs" Line="1" Column="1" />
       <File FileName="Assets\Object\Scripts\Line.cs" Line="1" Column="1" />
-      <File FileName="Assets\Object\Scripts\PlayerMovement.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
