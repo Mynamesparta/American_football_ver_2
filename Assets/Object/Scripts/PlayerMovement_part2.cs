@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ public partial class PlayerMovement : MonoBehaviour
 		}
 		if(OPTION.pass_time)
 		{
+			//MonoBehaviour.print("Pass Time!");
 			if(Ideal_player_for_pass!=null)
 			{
 				//MonoBehaviour.print(name+":pass time");

@@ -136,6 +136,11 @@ public partial class PlayerMovement : MonoBehaviour {
 		}
 		if(OPTION.have_ball)
 		{
+			if(Input.GetButton("Test"))
+			{
+				Start_Kick_off();
+			}
+
 		}
 	}
 	//===========================================Pick=Up===================================================
@@ -227,8 +232,7 @@ public partial class PlayerMovement : MonoBehaviour {
 			//=============================to=Pass=========
 			if(!OPTION.isBot&&OPTION.have_ball&&Input.GetMouseButtonDown(mouseIndex))
 			{
-				state_of_player=State_of_Player.Pass;
-				anim.SetBool(hash.bool_pass,true);
+				StartPass();
 			}
 			break;
 		}
@@ -343,6 +347,16 @@ public partial class PlayerMovement : MonoBehaviour {
 				anim.SetBool(hash.bool_pass,false);
 		/*/
 	}
+	void StartPass()
+	{
+		state_of_player=State_of_Player.Pass;
+		anim.SetBool(hash.bool_pass,true);
+		if(indexBallpos==0)
+		{
+			new_Ball_Pos(1);
+		}
+
+	}
 	void Pass()
 	{
 		if (ball_con == null)
@@ -389,6 +403,7 @@ public partial class PlayerMovement : MonoBehaviour {
 		anim.SetBool(hash.bool_ball, false);
 		anim.SetBool(hash.bool_pass,false);
 	}
+
 	void endPass()
 	{
 		//print ("End Pass");
@@ -491,9 +506,7 @@ public partial class PlayerMovement : MonoBehaviour {
 		current_speedB = getVector_of_Speed (pos - transform.position,
 		                                  speeds_of_Ball [Index_for_currentPassB],
 		                                     getAngel(C[0],speeds_of_Ball[Index_for_currentPassB]));
-
-		state_of_player=State_of_Player.Pass;
-		anim.SetBool(hash.bool_pass,true);
+		StartPass ();
 	}
 	//=====================Fall======================================
 	public void Fall_Stay(Collider other)
@@ -538,6 +551,7 @@ public partial class PlayerMovement : MonoBehaviour {
 	}
 	public void getBall()
 	{
+		indexBallpos = 0;
 		ball_con.SetPosition(ball_position[indexBallpos]);
 		ball_con.SetRotation(transform); 
 		ball_con.Take ();
@@ -549,6 +563,23 @@ public partial class PlayerMovement : MonoBehaviour {
 			arms[i].setMyPresions(false);
 		}
 		OPTION.pass_time = false;
+	}
+	void new_Ball_Pos()
+	{
+		if(OPTION.have_ball)
+		{
+			ball_con.SetPosition(ball_position[indexBallpos]);
+			ball_con.SetRotation(transform);
+		}
+	}
+	void new_Ball_Pos(int index)
+	{
+		if(OPTION.have_ball)
+		{
+			ball_con.SetPosition(ball_position[index]);
+			ball_con.SetRotation(transform);
+			indexBallpos=index;
+		}
 	}
 	void Ball_Exit(Collider other)
 	{
@@ -589,10 +620,18 @@ public partial class PlayerMovement : MonoBehaviour {
 		OPTION.isBlockPickUp = false;
 		current_action = null;
 	}
-
+	//==========================================================Kick_off=====================================================
+	public void Start_Kick_off()
+	{
+		if(OPTION.have_ball)
+		{
+			anim.SetBool(hash.bool_kick_off,true);
+			new_Ball_Pos(2);
+		}
+	}
 	//==========================================================Options=struct===============================================
 	[System.Serializable]
-	public enum State_of_Player {Normal,Jump,Pass,Fall};
+	public enum State_of_Player {Normal,Jump,Pass,Fall,Kick_off};
 	[System.Serializable]
 	public enum State_of_Pass {Hand,Kick_Off}
 	[System.Serializable]

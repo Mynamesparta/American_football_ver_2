@@ -12,6 +12,7 @@ public class Hash_id : MonoBehaviour
 	public int bool_pass;
 	public int Pass;
 	public int int_fall;
+	public int bool_kick_off;
 	void Awake ()
 	{
 		float_speed = Animator.StringToHash ("Speed");
@@ -31,5 +32,7 @@ public class Hash_id : MonoBehaviour
 		Pass=Animator.StringToHash("Base Layer.Pass");
 
 		int_fall = Animator.StringToHash ("Fall");
+
+		bool_kick_off = Animator.StringToHash ("Kick_off");
 	}
 }
